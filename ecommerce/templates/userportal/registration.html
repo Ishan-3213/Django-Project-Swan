@@ -1,0 +1,51 @@
+{% extends 'userportal/base.html' %}
+{% load static %}
+{% block body_block %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Login/Register</h1>
+                <nav class="d-flex align-items-center">
+                    {% comment %} <a href="{% static 'userportal/index.html' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'ecommerce:login_1' %}">Login/Register</a> {% endcomment %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<div class="col">
+    <div class="login_form_inner">
+        
+        <h1>Register Here!</h1>
+        <h3>Fill out the form: </h3>
+
+        <form  method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-first">
+            {{ form.as_p }}
+            </div>
+            <div class="col-first">
+            <input class="btn-primary" type="submit" name="Register" value="Register">
+            </div>
+        </form>
+        {% comment %} {% if messages %}
+            <div class="col-md-12 form-group">
+                <div class="creat_account">
+                    {% for message in messages %}
+                    <label style="color:red;">{{ message }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %} {% endcomment %}
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+</div>
