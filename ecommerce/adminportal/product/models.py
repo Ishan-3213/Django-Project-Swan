@@ -14,13 +14,14 @@ class Category(BaseField):
 
     def __str__(self):
         return self.name
+
     
 
 class Product(BaseField):
     name = models.CharField(max_length=256)
     price = models.FloatField(null=False)
     detail = models.TextField()
-    # image = models.ImageField(upload_to="product/", default = "product/p1.png")
+    image = models.ImageField(upload_to="image/", default="image/p1.png" )
     brand = models.ForeignKey(Brand, related_name="product_brand", on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name="product_category", on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
@@ -28,10 +29,6 @@ class Product(BaseField):
     def __str__(self):
         return self.name
     
-class ProductImage(BaseField):
-    product_id = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="product_name", default=1)
-    image = models.ImageField(upload_to="product/", default = "product/p1.png")
-
     @property
     def imageURL(self):
         try:
@@ -39,3 +36,15 @@ class ProductImage(BaseField):
         except:
             url = ''
         return url
+
+# class ProductImage(BaseField):
+#     product_id = models.ForeignKey(Product, verbose_name='parent_category', related_name='children',on_delete=models.CASCADE, default=0)
+#     image = models.ImageField(upload_to="product/", default="product/p1.png" )
+
+#     @property
+#     def imageURL(self):
+#         try:
+#             url = self.image.url
+#         except:
+#             url = ''
+#         return url

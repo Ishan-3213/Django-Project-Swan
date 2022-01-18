@@ -1,0 +1,100 @@
+{% extends 'userportal/base.html' %} {% load static %} {% block head %}
+<!-- Site Title -->
+<title>Ecommerce</title>
+{% endblock %} {% block body_block %}
+<!-- start product Area -->
+<section class="section_gap">
+    <!-- single product slide -->
+    <div class="single-product-slider">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <div class="section-title">
+                        <h1> </h1>
+                        <p> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                {% if products %} {% for stock_1 in products %}
+                <!-- single product -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="single-product">
+                        <a href="{% url 'user_urls:single_product' stock_1.id  %}">
+                            <img class="img-fluid" src="{{ stock_1.image.url }}" style="width:263px;height:280px;" alt="">
+                        </a>
+                        <div class="stock-details">
+                            <h6><a href="{% url 'user_urls:single_product' stock_1.id %}">{{ stock_1.name }}</a></h6>
+                            <div class="price">
+                                <h6>${{ stock_1.price }}</h6>
+                            </div>
+                            <div class="prd-bottom">
+                                <a class="social-info">
+                                    <span class="ti-bag"></span>
+                                    <button class="btn btn-primary" id="add_to_cart" data-action="add" onclick="updateuserorder('{{ stock_1.id }}')">Add To Cart</button>
+                                    <p class="hover-text">add to bag</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %} {% else %}
+                <div class="container">
+                    <h2> The search you are looking for:<b> {{ q }} </b>Not Exist </h2>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end product Area -->
+
+{% endblock %} {% block scripts %}
+<script>
+    function updateuserorder(item_id, action) {
+        { %
+            if not request.user.is_authenticated %
+        }
+        window.location.replace("{% url 'user_urls:login_1' %}"); { %
+            else %
+        }
+        // let button = $(element)
+        // let product_id = button.data("id")
+        $.ajax({
+            method: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            url: pass,
+            data: {
+                "action": "add",
+                "item_id": item_id
+            },
+            success: function(data) {
+                alert("Added to cart successfully");
+            },
+            error: function(error) {
+                swal("Error", error.responseJSON['message'], "error");
+            }
+        }) { % endif %
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+</script>
+{% endblock %}

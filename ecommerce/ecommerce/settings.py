@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_DIR = os.path.join(BASE_DIR,'ecommerce/static')
+STATIC_DIR = os.path.join(BASE_DIR,'static')
 MEDIA_DIR = os.path.join(BASE_DIR,'media')
 
 
@@ -30,6 +30,7 @@ SECRET_KEY = 'mwq3@^(p7qe8_as$&@9)rj@v==_eze(n-i_pcc_e+lzgwz5)1o'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 
 # Application definition
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'adminportal.product',
     'rest_framework', 
     'rest_framework.authtoken',
+    'crispy_forms',
+
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -93,7 +96,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'ecommerce1', 
+            'NAME': 'ecommerce2', 
             'USER': 'postgres', 
             'PASSWORD': 'ishan1811oo',
             'HOST': '127.0.0.1', 
@@ -148,3 +151,5 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'user.User'
