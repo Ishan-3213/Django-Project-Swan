@@ -15,24 +15,36 @@
                     </div>
                 </div>
             </div>
-            <div class="container">
-                {% if products %} {% for stock_1 in products %}
-                <!-- single product -->
+            <div class="row">
+                {% if products %} {% for item in products %}
                 <div class="col-lg-3 col-md-6">
                     <div class="single-product">
-                        <a href="{% url 'user_urls:single_product' stock_1.id  %}">
-                            <img class="img-fluid" src="{{ stock_1.image.url }}" style="width:263px;height:280px;" alt="">
-                        </a>
-                        <div class="stock-details">
-                            <h6><a href="{% url 'user_urls:single_product' stock_1.id %}">{{ stock_1.name }}</a></h6>
+                        <img class="img-fluid" src="{{ item.image.url }}" style="width:263px;height:280px;" alt="">
+                        <div class="product-details">
+                            <a href="{% url 'user_urls:single_product' item.id %}">
+                                <h6>{{ item.name }}</h6>
+                            </a>
                             <div class="price">
-                                <h6>${{ stock_1.price }}</h6>
+                                <h6>${{ item.price }}.00</h6>
+                                <h6 class="l-through">$210.00</h6>
                             </div>
                             <div class="prd-bottom">
-                                <a class="social-info">
+
+                                <a href="" class="social-info">
                                     <span class="ti-bag"></span>
-                                    <button class="btn btn-primary" id="add_to_cart" data-action="add" onclick="updateuserorder('{{ stock_1.id }}')">Add To Cart</button>
                                     <p class="hover-text">add to bag</p>
+                                </a>
+                                <a href="" class="social-info">
+                                    <span class="lnr lnr-heart"></span>
+                                    <p class="hover-text">Wishlist</p>
+                                </a>
+                                <a href="" class="social-info">
+                                    <span class="lnr lnr-sync"></span>
+                                    <p class="hover-text">compare</p>
+                                </a>
+                                <a href="" class="social-info">
+                                    <span class="lnr lnr-move"></span>
+                                    <p class="hover-text">view more</p>
                                 </a>
                             </div>
                         </div>
@@ -45,6 +57,7 @@
                 {% endif %}
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!-- end product Area -->

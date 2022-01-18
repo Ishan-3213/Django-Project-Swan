@@ -12,7 +12,7 @@ urlpatterns = [
     path('user_data/',AdminUserView.as_view(),name='user_data'),
     path('admin_customized/',AdminHomeView.as_view(),name='admin_customized'),
     path('registration/',RegisterUser.as_view(), name='registration'),
-    path('login/', SignUpView.as_view(), name='login_1'),
+    path('login/', LoginView.as_view(template_name='adminportal/login.html'), name='login_1'),
     path('logout/', LogoutView.as_view(template_name='adminportal/login.html'), name='logout'),
     path('single_product/<pk>', SingleProductView.as_view(),name='single_product'),
     path('search/ ', SearchView.as_view(), name='search'),

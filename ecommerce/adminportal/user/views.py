@@ -1,31 +1,22 @@
-from distutils.log import error
-import imp
-from multiprocessing import context
-from re import template
-from statistics import mode
 from django.db.models.query_utils import Q
 from adminportal.product.models import *
-from django.http.response import  HttpResponse, HttpResponseRedirect, JsonResponse
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http.response import   HttpResponseRedirect
 from django.urls import reverse
-from django.contrib import messages
-from django.views.generic import TemplateView, CreateView, View, ListView, DeleteView, UpdateView,RedirectView, DetailView, FormView
-from django.contrib.auth.views import LoginView
+from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import   UserForm
 from django.contrib.auth.models import User
 from .models import *
 from adminportal.product.models import Product
+from django.contrib.messages.views import SuccessMessageMixin
+
 # Create your views here.
 
-class AdminUserView(ListView):
+class AdminUserView(LoginRequiredMixin,ListView):
     model = User 
     template_name = 'adminportal/user.html'
     context_object_name = 'user_data'
-
-    
 
 class HomeView(ListView):
 
@@ -34,7 +25,7 @@ class HomeView(ListView):
     # model = models.ProductImage
     template_name = 'userportal/index.html'
 
-class AdminHomeView(ListView):
+class AdminHomeView(LoginRequiredMixin, ListView):
 
     context_object_name = 'items'
     model = Product
@@ -44,16 +35,14 @@ class AdminHomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["brand"] = Brand.objects.all()
-        return context
-    
+        return context   
    
-
-class SingleProductView(DetailView):
+class SingleProductView(LoginRequiredMixin,DetailView):
     model = Product
     template_name = 'userportal/single_product.html'
 
-    
-class SearchView(ListView):
+
+class SearchView(LoginRequiredMixin,ListView):
 
     model = Product
     template_name = 'userportal/search.html'
@@ -61,61 +50,18 @@ class SearchView(ListView):
     # context_object_name = 'q'
 
     def get_queryset(self):
-        print("enter the function")
-        q = self.request.GET.get('q')
-        print("getting q", q)
-        data = dict()
-        try:
-            products = Product.objects.filter(Q(name__icontains=q) | Q(price__icontains=q))
-            data['products'] = products 
-            data['q'] = q
-            print('data', data)
-            return products
-        except:
-            return q 
+        search = self.request.GET.get('q')
+        if search:
+            products = Product.objects.filter(Q(name__icontains=search ) | Q(price__icontains=search) |
+                                             Q(brand__name=search) | Q(category__name=search)).order_by('created_at')
+        else:
+            products = Product.objects.none()
+        return products
 
-class SignUpView(LoginView):
-    template_name = 'adminportal/login.html'
-    redirect_authenticated_user = True
- 
-
-    def get_success_url(self):
-        return reverse('user_urls:index')
-
-       
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:    
-    #         return super().dispatch(request, *args, **kwargs)
-    #     else:
-    #         return redirect("user_urls:index")
-
-
-    # def post(self, request, *args, **kwargs):
-    #     try:
-    #         print("Entering Username nd Password")
-    #         username = request.POST.get('username')
-    #         password = request.POST.get('password')
-
-    #         user = authenticate(username=username, password=password)
-    #         print("user", user)
-    #         token, created = Token.objects.get_or_create(user=user)
-
-    #         if user:
-    #             if user.is_active:
-    #                 login(request, user)
-    #                 return HttpResponseRedirect(reverse("user_urls:index"))
-
-    #             else:
-    #                 return HttpResponse("Account not active")
-
-    #     except Exception as e:
-    #         messages.add_message(request, messages.INFO, "Please Enter Valid Username or Password")
-    #         return render(request, 'adminportal/login.html', {})
-
-
-class RegisterUser(FormView):
+class RegisterUser(FormView, SuccessMessageMixin):
     form_class = UserForm
     template_name = 'adminportal/registration.html'
+    success_message = "%(name)s was created successfully"
   
 
     def form_valid(self, form):
@@ -123,23 +69,26 @@ class RegisterUser(FormView):
         user.set_password(user.password)   
         user.save()    
         print("user is saving data")
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         form = self.form_class()
         print("Data is invalid") 
         return super().form_invalid(form)
 
+    def get_success_message(self, cleaned_data):
+        username = cleaned_data["username"]
+        return username + " Created Successfully..!!"
+
     def get_success_url(self):
         return reverse('user_urls:login_1')
 
-
-        
     
-class UpdateUser(UpdateView):
+class UpdateUser(UpdateView, SuccessMessageMixin):
     model = User
     form_class = UserForm
     template_name = 'adminportal/update.html'
+    success_message = "%(username)s was created successfully"
 
     def form_valid(self, form):
         user = form.save()

@@ -30,7 +30,6 @@ SECRET_KEY = 'mwq3@^(p7qe8_as$&@9)rj@v==_eze(n-i_pcc_e+lzgwz5)1o'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-CRISPY_TEMPLATE_PACK = 'uni_form'
 
 
 # Application definition
@@ -48,8 +47,9 @@ INSTALLED_APPS = [
     'rest_framework', 
     'rest_framework.authtoken',
     'crispy_forms',
-
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -153,3 +153,7 @@ MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'user.User'
+
+LOGIN_URL = 'user_urls:login_1'
+LOGIN_REDIRECT_URL = '/'
+

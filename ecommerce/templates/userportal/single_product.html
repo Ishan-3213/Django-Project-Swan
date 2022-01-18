@@ -207,12 +207,6 @@
 {% endblock %} {% block script %}
 <script>
     function updateuserorder(item_id, action) {
-        { %
-            if not request.user.is_authenticated %
-        }
-        window.location.replace("{% url 'user_urls:login_1' %}"); { %
-            else %
-        }
         // var updateBtns = document.getElementsByClassName('update-cart');
 
         // for (var i = 0; i < updateBtns.length; i++) {
