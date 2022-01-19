@@ -51,6 +51,7 @@ class SearchView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
         search = self.request.GET.get('q')
+        print("search", search)
         if search:
             products = Product.objects.filter(Q(name__icontains=search ) | Q(price__icontains=search) |
                                              Q(brand__name=search) | Q(category__name=search)).order_by('created_at')

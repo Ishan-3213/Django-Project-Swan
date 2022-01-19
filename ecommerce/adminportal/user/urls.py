@@ -15,7 +15,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='adminportal/login.html'), name='login_1'),
     path('logout/', LogoutView.as_view(template_name='adminportal/login.html'), name='logout'),
     path('single_product/<pk>', SingleProductView.as_view(),name='single_product'),
-    path('search/ ', SearchView.as_view(), name='search'),
+    path('search/', SearchView.as_view(), name='search'),
     path('update/<int:pk> ', UpdateUser.as_view(), name='update'),
     # path('update_customer/<int:pk> ', CustomerUser.as_view(), name='update_customer'),
     path('delete/<int:pk> ', DeleteUser.as_view(), name='delete'),

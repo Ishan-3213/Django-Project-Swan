@@ -19,7 +19,10 @@ urlpatterns = [
     path('update_category/<int:pk>', UpdateCategoryView.as_view(), name='update_category'),
     path('delete_category/<int:pk>', DeleteCategoryView.as_view(), name='delete_category'),
 
-    path('category_list/', CategoryBrandFilter.as_view(), name='category_list'),
+    path('category_brand_list/', CategoryBrandListView.as_view(), name='category_list'),
+    path('categories/<pk>', CategoryFilterView.as_view(), name='categories'), 
+    path('brands/<pk>', BrandFilterView.as_view(), name='brands'), 
+
 
     
 ]
