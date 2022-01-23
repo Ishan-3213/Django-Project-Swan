@@ -14,7 +14,10 @@
                     <div class="col-md-12 form-group">
                         <div class="creat_account">
                             {% for message in messages %}
-                            <label style="color:red;">{{ message }}</label> {% endfor %}
+                            <div style="color:rgb(1, 9, 119);" class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     <form class="pt-3" method="POST" action="{% url 'user_urls:login_1' %}">

@@ -133,9 +133,13 @@
                     <!-- single product -->
                     <div class="col-lg-4 col-md-6">
                         <div class="single-product">
-                            <img class="img-fluid" src="{{ product.image.url }}" style="width:263px;height:280px;" alt="">
+                            <a href="{% url 'user_urls:single_product' product.id %}">
+                                <img class="img-fluid" src="{{ product.image.url }}" style="width:263px;height:280px;" alt="">
+                            </a>
                             <div class="product-details">
-                                <h6>{{ product.name }}</h6>
+                                <a href="{% url 'user_urls:single_product' product.id %}">
+                                    <h6>{{ product.name }}</h6>
+                                </a>
                                 <div class="price">
                                     <h6>${{ product.price }}.00</h6>
                                     <h6 class="l-through">$210.00</h6>

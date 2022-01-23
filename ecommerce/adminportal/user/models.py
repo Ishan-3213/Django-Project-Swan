@@ -20,7 +20,8 @@ class User(BaseField, AbstractUser):
     profile_pic = models.ImageField(upload_to = "profile_pic", default="profile_pic/p1.jpg")
     phone_regex = RegexValidator(regex=r'^[7-9]{1}\d{9}', message="Phone number must be entered in the format: '999999999'")
     phone_number = models.CharField(validators=[phone_regex], max_length=10, blank=True, unique=True) 
-
+    is_superuser = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
     
@@ -30,7 +31,7 @@ class User(BaseField, AbstractUser):
         
 
     def __str__(self):
-        return self.email
+        return self.username
 
     @property
     def imageURL(self):
@@ -40,9 +41,6 @@ class User(BaseField, AbstractUser):
             url = ''
         return url
 
-# @receiver(post_save, sender=User)
-# def create_auth_token(sender,instance = None, created = False,  **kwargs):
-#     if created:
-#         Token.objects.create(username=instance.email)
+
     
     

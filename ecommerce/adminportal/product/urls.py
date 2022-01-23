@@ -3,6 +3,7 @@ from . import views
 from django.contrib import admin
 from django.urls import path
 from .views import *
+from generic.views import BaseListView
 
 app_name = 'product_urls'
 
@@ -19,7 +20,7 @@ urlpatterns = [
     path('update_category/<int:pk>', UpdateCategoryView.as_view(), name='update_category'),
     path('delete_category/<int:pk>', DeleteCategoryView.as_view(), name='delete_category'),
 
-    path('category_brand_list/', CategoryBrandListView.as_view(), name='category_list'),
+    path('category_brand_list/', BaseListView.as_view(), name='category_list'),
     path('categories/<pk>', CategoryFilterView.as_view(), name='categories'), 
     path('brands/<pk>', BrandFilterView.as_view(), name='brands'), 
 

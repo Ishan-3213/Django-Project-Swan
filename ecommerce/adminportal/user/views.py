@@ -1,8 +1,8 @@
 from django.db.models.query_utils import Q
+from django.http import JsonResponse
 from adminportal.product.models import *
-from django.http.response import   HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView
+from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import   UserForm
@@ -11,8 +11,7 @@ from .models import *
 from adminportal.product.models import Product
 from django.contrib.messages.views import SuccessMessageMixin
 
-# Create your views here.
-
+# Create BaseView For the below classes 
 class AdminUserView(LoginRequiredMixin,ListView):
     model = User 
     template_name = 'adminportal/user.html'
@@ -36,11 +35,6 @@ class AdminHomeView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["brand"] = Brand.objects.all()
         return context   
-   
-class SingleProductView(LoginRequiredMixin,DetailView):
-    model = Product
-    template_name = 'userportal/single_product.html'
-
 
 class SearchView(LoginRequiredMixin,ListView):
 
@@ -58,11 +52,20 @@ class SearchView(LoginRequiredMixin,ListView):
         else:
             products = Product.objects.none()
         return products
+# Till here   
 
-class RegisterUser(FormView, SuccessMessageMixin):
+class SingleProductView(LoginRequiredMixin,DetailView):
+    model = Product
+    template_name = 'userportal/single_product.html'
+
+class UserDetailView(SuccessMessageMixin ,LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'adminportal/single_user.html'
+
+class RegisterUser(SuccessMessageMixin, FormView):
     form_class = UserForm
     template_name = 'adminportal/registration.html'
-    success_message = "%(name)s was created successfully"
+    # success_message = "%(name)s was created successfully"
   
 
     def form_valid(self, form):
@@ -73,7 +76,6 @@ class RegisterUser(FormView, SuccessMessageMixin):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        form = self.form_class()
         print("Data is invalid") 
         return super().form_invalid(form)
 
@@ -84,28 +86,26 @@ class RegisterUser(FormView, SuccessMessageMixin):
     def get_success_url(self):
         return reverse('user_urls:login_1')
 
-    
-class UpdateUser(UpdateView, SuccessMessageMixin):
+class UpdateUser(SuccessMessageMixin, UpdateView):
     model = User
     form_class = UserForm
     template_name = 'adminportal/update.html'
-    success_message = "%(username)s was created successfully"
+    # success_message = "%(username)s was created successfully"
 
     def form_valid(self, form):
         user = form.save()
         user.set_password(user.password)   
-        user.save()    
+        # user.save()    
         print("user is saving data")
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
-    # def form_invalid(self, form):
-    #     form = self.form_class()
-    #     print("Data is invalid") 
-    #     return super().form_invalid(form)
+    def get_success_message(self, cleaned_data):
+        username = cleaned_data["username"]
+        return username + " Updated Successfully..!!"
+  
 
     def get_success_url(self):
         return reverse('user_urls:user_data')
-
 
 class DeleteUser(DeleteView):
     model = User
@@ -115,55 +115,40 @@ class DeleteUser(DeleteView):
     def get_success_url(self):
         return reverse('user_urls:user_data')
 
+class AddToCartView(SuccessMessageMixin, LoginRequiredMixin, View):
+
+    def add_to_cart(request, *args, **kwargs):
+
+        item_id = request.POST.get('item_id')
+        print("item_id", item_id)
+
+        action = request.POST.get('action')
+        print("action", action)
+
+        product, created = Product.objects.get_or_create(id = item_id)
+        print("item", product)
+
+        user = User.objects.filter(username = request.user).first()
+        print("user", user)
+
+        cart_item, created = CartItem.objects.get_or_create(user = user, product = product)
+        print("order", cart_item)
+
+        if action == "add":
+            cart_item.quantity += 1
+        
+        elif action == "remove":
+            cart_item.quantity -+ 1
+        
+        else:
+            print("Something's wrong with the action..!!")
+        
+        cart_item.save()
+        return JsonResponse("Item Added Successfully..!!", safe=False) 
 
 
-    # def get_context_data(self,  **kwargs):
-    #     context = super(UpdateUser, self).get_context_data(**kwargs)
-    #     context['customer'] = Customer.objects.get(id =0)
-    #     if 'form_U' not in context:
-    #         context['form_U'] = self.form_class(initial={'username': context['user'].username , 'password': context['user'].password})
-    #     if 'form_P' not in context:
-    #         context['form_P'] = self.second_form_class(initial={'email': context['customer'].email, 'phone_number' : context['customer'].phone_number})
-    #     return context
+        
 
 
-
-
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(UpdateUser, self).get_context_data(**kwargs)
-    #     if 'form_U' not in context:
-    #         context['form_U'] = self.form_class(self.request.GET , instance=self.request.user)
-    #     if 'form_P' not in context:
-    #         context['form_P'] = self.second_form_class(self.request.GET, instance=self.request.user)
-    #     return context
-
-
-
-
-    # def get(self, request, *args, **kwargs):
-    #     super(UpdateUser, self).get(request, *args, **kwargs)
-    #     form = self.form_class
-    #     form2 = self.second_form_class
-    #     return self.render_to_response(self.get_context_data(
-    #         object=self.object, form=form, form2=form2))
-
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     form = self.form_class(request.POST)
-    #     form2 = self.second_form_class(request.POST)
-
-    #     if form.is_valid() and form2.is_valid():
-    #         userdata = form.save(commit=False)
-    #         # used to set the password, but no longer necesarry
-    #         userdata.save()
-    #         employeedata = form2.save(commit=False)
-    #         employeedata.user = userdata
-    #         employeedata.save()
-    #         messages.success(self.request, 'Settings saved successfully')
-    #         return HttpResponseRedirect(self.get_success_url())
-    #     else:
-    #         return self.render_to_response(
-    #           self.get_context_data(form=form, form2=form2))
     
 

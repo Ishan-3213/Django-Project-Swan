@@ -4,6 +4,8 @@ from django.http import request
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
+
+from generic.views import BaseListView
 from .forms import *
 from django.shortcuts import get_object_or_404
 # from ecommerce.adminportal.product.models import ProductImage
@@ -28,6 +30,7 @@ class BrandCreateView(SuccessMessageMixin, CreateView, ListView):
     template_name = "adminportal/brand.html"
     # success_url = '/admin_customized/'
     context_object_name = 'brand'
+    ordering = ["-id"]
 
     def get_success_message(self, cleaned_data):
         name = cleaned_data["name"]
@@ -122,63 +125,25 @@ class DeleteCategoryView(SuccessMessageMixin, DeleteView):
     def get_success_url(self):
         return reverse('user_urls:admin_customized')
 
-class CategoryBrandListView(ListView):
-    model = Product
-    # model = models.ProductImage
-    context_object_name = 'products'
-    template_name = 'userportal/category.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["brand"] = Brand.objects.all()
-        context["category"] = Category.objects.all()
-        return context 
-
-class CategoryFilterView(ListView):
-    model = Product
-    template_name = 'userportal/category.html'
-    context_object_name = 'products'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["brand"] = Brand.objects.all()
-        context["category"] = Category.objects.all()
-        return context 
+class CategoryFilterView(BaseListView):
 
     def get_queryset(self):
         category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        # brand = get_object_or_404 (Brand, pk = self.kwargs['pk'])
-        print("category", category)
-        # print("brand", brand)
         if category:
             products = Product.objects.filter(Q(category__name = category))
-            print("Inside Queryset")
-            # products = Product.objects.filter(Q(brand__name = slug) | Q(category__name = slug))
         else:
             products = Product.objects.none()
         print("Products", products)
         return products  
 
-class BrandFilterView(ListView):
-    model = Product
-    template_name = 'userportal/category.html'
-    context_object_name = 'products'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["brand"] = Brand.objects.all()
-        context["category"] = Category.objects.all()
-        return context 
+class BrandFilterView(BaseListView):
 
     def get_queryset(self):
         brand = get_object_or_404(Brand, pk=self.kwargs['pk'])
-        # brand = get_object_or_404 (Brand, pk = self.kwargs['pk'])
         print("brand", brand)
-        # print("brand", brand)
         if brand:
             products = Product.objects.filter(Q(brand__name = brand))
             print("Inside Queryset")
-            # products = Product.objects.filter(Q(brand__name = slug) | Q(category__name = slug))
         else:
             products = Product.objects.none()
         print("Products", products)

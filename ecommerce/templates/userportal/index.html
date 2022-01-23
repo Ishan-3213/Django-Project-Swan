@@ -12,8 +12,10 @@
                     <div class="row single-slide">
                         <div class="col-lg-5">
                             <div class="banner-content">
-                                <h1>{{product.name}} <br>Collection!</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                                <h1>{{ product.name }} <br></h1>
+                                <h4>Category: {{ product.category }}</h4>
+                                <h4>Brand: {{ product.brand }}</h4>
+                                <p>{{ product.detail }}</p>
                                 <div class="add-bag d-flex align-items-center">
                                     <a class="add-btn" href=""><span class="lnr lnr-cross"></span></a>
                                     <span class="add-text text-uppercase">Add to Bag</span>
@@ -22,7 +24,7 @@
                         </div>
                         <div class="col-lg-7">
                             <div class="banner-img">
-                                <img class="img-fluid" src="{% static 'userportal/img/banner/p_1.png' %}" alt="">
+                                <img class="img-fluid" src="{{ product.image.url }}" style="width:500px;height:500px;" alt="">
                             </div>
                         </div>
                     </div>
@@ -116,9 +118,8 @@
                 </div>
             </div>
             <div class="row">
-                <!-- single product -->
                 {% if items %} {% for item in items %}
-
+                <!-- single product -->
                 <div class="col-lg-3 col-md-6">
                     <div class="single-product">
                         <img class="img-fluid" src="{{ item.image.url }}" style="width:263px;height:280px;" alt="">
@@ -129,13 +130,17 @@
                             <div class="price">
                                 <h6>${{ item.price }}.00</h6>
                                 <h6 class="l-through">$210.00</h6>
+
                             </div>
+
                             <div class="prd-bottom">
 
-                                <a href="" class="social-info">
-                                    <span class="ti-bag"></span>
-                                    <p class="hover-text">add to bag</p>
+                                <a type="button" class="social-info">
+                                    <span class="ti-bag" data-id="" onclick="AddToCart('{{ item.id }}')"></span>
+                                    <p class="hover-text">add to bag </p>
                                 </a>
+                                <!-- <button class="btn btn-primary" onclick="AddToCart('{{ item.id }}')">Add To Bag</button> -->
+
                                 <a href="" class="social-info">
                                     <span class="lnr lnr-heart"></span>
                                     <p class="hover-text">Wishlist</p>
@@ -208,4 +213,47 @@
 </section>
 <!-- end product Area -->
 
-{% endblock %} {% block scripts %} {% endblock %}
+{% endblock %} {% block scripts %}
+<script>
+    function AddToCart(item_id) {
+        console.log('item_id :', item_id)
+
+        $.ajax({
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken,
+            },
+            url: "{% url 'user_urls:add_to_cart' %}",
+            data: {
+                'item_id': item_id,
+                'action': 'add'
+            },
+            success: function(data) {
+                alert("Successfully added ");
+            },
+            error: function(error) {
+                alert("Error!...error Something went wrong");
+            }
+
+        })
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    // const csrftoken = getCookie('csrftoken');
+</script> {% endblock %}
