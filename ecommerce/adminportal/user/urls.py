@@ -11,8 +11,8 @@ urlpatterns = [
     path('',HomeView.as_view(),name='index'),
     path('admin_customized/',AdminHomeView.as_view(),name='admin_customized'),
 
-    path('cart/',views.AddToCartView.add_to_cart,name='add_to_cart'),
-
+    path('add_to_cart/',views.AddToCartView.add_to_cart,name='add_to_cart'),
+    path('cart/',views.AddToCartView.cart_view,name='cart'),
 
     path('user_data/',AdminUserView.as_view(),name='user_data'),
     path('user_update/<int:pk>', UpdateUser.as_view(), name='user_update'),

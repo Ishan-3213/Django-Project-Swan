@@ -1,8 +1,9 @@
 from django.db.models.query_utils import Q
 from django.http import JsonResponse
+from django.shortcuts import render
 from adminportal.product.models import *
 from django.urls import reverse
-from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView, View
+from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import   UserForm
@@ -115,15 +116,30 @@ class DeleteUser(DeleteView):
     def get_success_url(self):
         return reverse('user_urls:user_data')
 
-class AddToCartView(SuccessMessageMixin, LoginRequiredMixin, View):
+class AddToCartView(SuccessMessageMixin, LoginRequiredMixin, TemplateView):
+
+    def cart_view(request, *args, **kwargs):
+
+        user = User.objects.filter(username = request.user).first()
+        print("user", user)
+
+        order = CartItem.objects.filter(Q(user__username = user))
+        print("order", order)
+
+        # cart_item, created = CartItem.objects.get_or_create(user=request.user)[0]
+        # print("cart_item", cart_item)
+
+        # items = order.cartitem_set.all()
+        # print("items", items)
+
+        context = {'items': order}
+        return render(request, 'userportal/cart.html', context=context)
+
 
     def add_to_cart(request, *args, **kwargs):
 
         item_id = request.POST.get('item_id')
-        print("item_id", item_id)
-
         action = request.POST.get('action')
-        print("action", action)
 
         product, created = Product.objects.get_or_create(id = item_id)
         print("item", product)
@@ -134,17 +150,36 @@ class AddToCartView(SuccessMessageMixin, LoginRequiredMixin, View):
         cart_item, created = CartItem.objects.get_or_create(user = user, product = product)
         print("order", cart_item)
 
+        # cart = CartItem.objects.values()
+        # data = list(cart)
+        # print("cart", data)
+        # data = serializers.serialize('json', cart)
+
+        cart_total = []
+        print("Before cart_item_Total price", cart_total)
+
         if action == "add":
             cart_item.quantity += 1
+            cart_total = cart_item.get_cart_total
+            # cart_total.append(True)
+            print("quntity added by 1: ", cart_total)
+
+            cart_item.save()
         
         elif action == "remove":
-            cart_item.quantity -+ 1
-        
+            cart_item.quantity -= 1
+            cart_total = cart_item.get_cart_total
+            # cart_total.append(True)
+            print("quntity removed by 1: ", cart_total)
+            cart_item.save()
         else:
             print("Something's wrong with the action..!!")
+
+        print(" After cart_item_Total price ", item_id)
         
         cart_item.save()
-        return JsonResponse("Item Added Successfully..!!", safe=False) 
+        print("cart_item", cart_item)
+        return JsonResponse({"cart_total" : cart_total, "item_id":item_id}) 
 
 
         

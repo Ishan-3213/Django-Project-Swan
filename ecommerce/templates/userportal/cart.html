@@ -1,204 +1,150 @@
 {% extends 'userportal/base.html' %} {% load static %} {% block head %}
-<!-- Site Title -->
-<title>Ecommerce</title>
+<title>Admin</title>
 {% endblock %} {% block body_block %}
+<!-- partial -->
 
-
-<!-- Start Banner Area -->
 <section class="banner-area organic-breadcrumb">
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
                 <h1>Shopping Cart</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="category.html">Cart</a>
+                    <a href="{% url 'user_urls:index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'product_urls:category' %}">Category</a>
                 </nav>
             </div>
         </div>
     </div>
 </section>
-<!-- End Banner Area -->
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% for message in messages %}
+                            <div style="color:rgb(1, 9, 119);" class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product Image</th>
+                                        <th>Product Name</th>
+                                        <th>Product Price</th>
+                                        <th>Product Add/Remove</th>
+                                        <th>Product Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if items %} {% for prod in items %}
+                                    <tr>
+                                        <td><img src="{{ prod.product.image.url }}" style="width:100px;height:100px;" alt=""></td>
+                                        <td>{{prod.product.name}}</td>
+                                        <td>{{prod.product.price}}</td>
+                                        <td>
+                                            <button onclick="updateuserorder('{{ prod.product.id }}','add')"><i class="fa fa-plus"></i></button>
 
-<!--================Cart Area =================-->
-<section class="cart_area">
-    <div class="container">
-        <div class="cart_inner">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart.jpg" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$360.00</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$720.00</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart.jpg" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$360.00</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$720.00</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/cart.jpg" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>Minimalistic shop for multipurpose use</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$360.00</h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$720.00</h5>
-                            </td>
-                        </tr>
-                        <tr class="bottom_button">
-                            <td>
-                                <a class="gray_btn" href="#">Update Cart</a>
-                            </td>
-                            <td>
+                                            <input id="item_update{{ prod.product.id }}" type="number" value="{{ prod.quantity }}" title="Quantity:" style="width:30px;height:30px;">
+                                            <button onclick="updateuserorder('{{ prod.product.id }}','remove')"><i class="fa fa-minus"></i></button>
+                                        </td>
+                                        <td id="cart_total{{ prod.product.id }}">{{ prod.get_cart_total }}</td>
+                                    </tr>
+                                    {% endfor %} {% endif %}
+                                    <tr>
+                                        <td>
+                                            <h4> Subtotal</h4>
+                                        </td>
+                                        <td>
+                                            <h4> Tax(18%) </h4>
+                                        </td>
 
-                            </td>
-                            <td>
+                                        <td>
+                                            <div class="checkout_btn_inner d-flex align-items-center">
+                                                <a class="gray_btn" href="{% url 'user_urls:index' %}">Continue Shopping</a> {% comment %}<a class="primary-btn" href="{% url 'ecommerce:checkout' %}">Proceed to checkout</a>{% endcomment %}
 
-                            </td>
-                            <td>
-                                <div class="cupon_text d-flex align-items-center">
-                                    <input type="text" placeholder="Coupon Code">
-                                    <a class="primary-btn" href="#">Apply</a>
-                                    <a class="gray_btn" href="#">Close Coupon</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                                            </div>
+                                        </td>
+                                        <td>
 
-                            </td>
-                            <td>
+                                        </td>
+                                        <td>
+                                            here's the total {{ items.get_total }}
+                                        </td>
+                                    </tr>
 
-                            </td>
-                            <td>
-                                <h5>Subtotal</h5>
-                            </td>
-                            <td>
-                                <h5>$2160.00</h5>
-                            </td>
-                        </tr>
-                        <tr class="shipping_area">
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <h5>Shipping</h5>
-                            </td>
-                            <td>
-                                <div class="shipping_box">
-                                    <ul class="list">
-                                        <li><a href="#">Flat Rate: $5.00</a></li>
-                                        <li><a href="#">Free Shipping</a></li>
-                                        <li><a href="#">Flat Rate: $10.00</a></li>
-                                        <li class="active"><a href="#">Local Delivery: $2.00</a></li>
-                                    </ul>
-                                    <h6>Calculate Shipping <i class="fa fa-caret-down" aria-hidden="true"></i></h6>
-                                    <select class="shipping_select">
-                                            <option value="1">Bangladesh</option>
-                                            <option value="2">India</option>
-                                            <option value="4">Pakistan</option>
-                                        </select>
-                                    <select class="shipping_select">
-                                            <option value="1">Select a State</option>
-                                            <option value="2">Select a State</option>
-                                            <option value="4">Select a State</option>
-                                        </select>
-                                    <input type="text" placeholder="Postcode/Zipcode">
-                                    <a class="gray_btn" href="#">Update Details</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="out_button_area">
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <div class="checkout_btn_inner d-flex align-items-center">
-                                    <a class="gray_btn" href="#">Continue Shopping</a>
-                                    <a class="primary-btn" href="#">Proceed to checkout</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</section>
-<!--================End Cart Area =================-->
+    <!-- content-wrapper ends -->
 
-{% endblock %} {% block scripts %} {% endblock %}
+    <!-- partial -->
+</div>
+<!-- main-panel ends -->
+{% endblock %} {% block scripts %}
+<script>
+    function updateuserorder(item_id, action) {
+        console.log('item:', item_id);
+        console.log('action', action)
+
+        $.ajax({
+            method: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            url: "{% url 'user_urls:add_to_cart' %}",
+            data: {
+                'action': action,
+                'item_id': item_id
+            },
+            success: function(data) {
+                console.log(data.item_id)
+                console.log(data.cart_total)
+
+                var x = document.getElementById('cart_total' + item_id);
+                x.innerHTML = data.cart_total
+
+                var result = document.getElementById('item_update' + item_id);
+                var item_update = result.value;
+
+                if (action == "add") {
+                    if (!isNaN(item_update)) result.value++;
+
+                } else if (action == "remove") {
+                    if (!isNaN(item_update) && item_update > 0) result.value--;
+
+                }
+
+            },
+            error: function(error) {
+                alert("Removel fail due to some reason..!!")
+            }
+
+        })
+    }
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+</script> {% endblock %}

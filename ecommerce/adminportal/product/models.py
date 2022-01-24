@@ -50,6 +50,32 @@ class CartItem(BaseField):
     def __str__(self):
         return f"{self.quantity} of {self.product} for {self.user}"
 
+    @property
+    def get_cart_item(self):
+        orderitem_1 = CartItem.objects.values()
+        orderitem = list(orderitem_1)
+        print(orderitem)
+        return orderitem
+
+    @property
+    def get_cart_total(self):
+        total = self.product.price * self.quantity
+        return total
+
+    @property
+    def get_total(self):
+        orderitems = self.get_cart_item
+        total_1 = sum([items.get_cart_total for items in orderitems])
+        cart_total = self.get_cart_total
+        for i in len(cart_total):
+            pass
+            # total_1 = 
+        total = total_1 + int(0.18 * total_1)
+        return total
+
+
+
+
 
 # class ProductImage(BaseField):
 #     product_id = models.ForeignKey(Product, verbose_name='parent_category', related_name='children',on_delete=models.CASCADE, default=0)
