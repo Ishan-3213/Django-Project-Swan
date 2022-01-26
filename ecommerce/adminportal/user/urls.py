@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from .views import * 
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
@@ -11,8 +10,8 @@ urlpatterns = [
     path('',HomeView.as_view(),name='index'),
     path('admin_customized/',AdminHomeView.as_view(),name='admin_customized'),
 
-    path('add_to_cart/',views.AddToCartView.add_to_cart,name='add_to_cart'),
-    path('cart/',views.AddToCartView.cart_view,name='cart'),
+    path('cart/',views.CartListView.as_view(),name='cart'),
+    path('add_to_cart/',views.AddToCartView.as_view(),name='add_to_cart'),
 
     path('user_data/',AdminUserView.as_view(),name='user_data'),
     path('user_update/<int:pk>', UpdateUser.as_view(), name='user_update'),
@@ -22,14 +21,5 @@ urlpatterns = [
     path('registration/',RegisterUser.as_view(), name='registration'),
     path('login/', LoginView.as_view(template_name='adminportal/login.html'), name='login_1'),
     path('logout/', LogoutView.as_view(template_name='adminportal/login.html'), name='logout'),
-
-    path('single_product/<pk>', SingleProductView.as_view(),name='single_product'),
-    path('search/', SearchView.as_view(), name='search'),
-
-    # path('update_customer/<int:pk> ', CustomerUser.as_view(), name='update_customer'),
-    # path('delete_customer/<int:pk> ', DeleteCustomer.as_view(), name='delete_customer'),
-
-
-
 
 ]

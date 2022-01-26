@@ -1,153 +1,99 @@
-from django.urls import reverse
-from django.contrib.messages.api import add_message, success
-from django.http import request
-from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import CreateView, DeleteView, UpdateView, ListView
 
-from generic.views import BaseListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
-from django.shortcuts import get_object_or_404
+from generic.views import *
 # from ecommerce.adminportal.product.models import ProductImage
 from django.db.models.query_utils import Q
 
 # Create your views here.
-class ProductCreateView(SuccessMessageMixin, CreateView):
-    form_class = ProductAddForm
-    model = Product
-    template_name = "adminportal/product_creation.html"
-    
-    def get_success_message(self, cleaned_data):
-        name = cleaned_data['name']
-        return  name + " Created Successfully..!!"
+class BrandCreateView(BaseCreateView):
 
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class BrandCreateView(SuccessMessageMixin, CreateView, ListView):
     form_class = ProductBrandForm
     model = Brand
     template_name = "adminportal/brand.html"
     # success_url = '/admin_customized/'
     context_object_name = 'brand'
-    ordering = ["-id"]
 
-    def get_success_message(self, cleaned_data):
-        name = cleaned_data["name"]
-        return name + " Created Successfully..!!"
+class UpdateBrandView(BaseUpdateView):
 
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-     
-class CategoryCreateView(SuccessMessageMixin, CreateView, ListView):
+    model = Brand
+    form_class = ProductBrandForm
+
+class DeleteBrandView(BaseDeleteView):
+
+    model = Brand
+
+class CategoryCreateView(BaseCreateView):
+
     form_class = ProductCategoryForm
     model = Category
     template_name = "adminportal/category.html"
-    # success_message = "%(name)s was created successfully"
     context_object_name = 'category'
 
-    def get_success_message(self, cleaned_data):
-        name = cleaned_data["name"]
-        return name + " Created Successfully..!!"
+class UpdateCategoryView(BaseUpdateView):
 
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized') 
-
-class UpdateProduct(SuccessMessageMixin, UpdateView):
-    model = Product
-    form_class = ProductAddForm
-    template_name = 'adminportal/update.html'
-    success_url = '/admin_customized/'
-
-    def get_success_message(self, cleaned_data):
-        name = cleaned_data["name"]
-        return name + " Updated Successfully..!!"
-
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class DeleteProduct(SuccessMessageMixin, DeleteView):
-    model = Product
-    template_name = 'adminportal/proddel.html'
-    context_object_name = 'delete_product'
-
-    def get_success_message(self, cleaned_data):
-        return "Product Deleted Successfully..!!"
-
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class UpdateBrandView(SuccessMessageMixin, UpdateView):
-    model = Brand
-    form_class = ProductBrandForm
-    template_name = 'adminportal/update.html'
-    success_url = '/admin_customized/'
-
-    def get_success_message(self, cleaned_data):
-        name = cleaned_data["name"]
-        return name + " Updated Successfully..!!"
-
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class DeleteBrandView(SuccessMessageMixin, DeleteView):
-    model = Brand
-    template_name = 'adminportal/proddel.html'
-    context_object_name = 'delete_product'
-
-    def get_success_message(self, cleaned_data):
-        return "Brand Deleted Successfully..!!"
-
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class UpdateCategoryView(SuccessMessageMixin, UpdateView):
     model = Category
     form_class = ProductCategoryForm
-    template_name = 'adminportal/update.html'
-    success_url = '/admin_customized/'
 
-    def get_success_message(self, cleaned_data):
-        self.name = cleaned_data["name"]
-        return self.name + " Updated Successfully..!!"
+class DeleteCategoryView(BaseDeleteView):
 
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class DeleteCategoryView(SuccessMessageMixin, DeleteView):
     model = Category
-    template_name = 'adminportal/proddel.html'
-    context_object_name = 'delete_product'
+   
+class CategoryBrandFilterView(BaseListView):
 
-    def get_success_message(self, cleaned_data):
-        return "Category Deleted Successfully..!!"
+    model = Product
+    template_name = 'userportal/category.html'
+    context_object_name = 'products'
 
-    def get_success_url(self):
-        return reverse('user_urls:admin_customized')
-
-class CategoryFilterView(BaseListView):
-
-    def get_queryset(self):
-        category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        if category:
-            products = Product.objects.filter(Q(category__name = category))
-        else:
-            products = Product.objects.none()
-        print("Products", products)
-        return products  
-
-class BrandFilterView(BaseListView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["brand"] = Brand.objects.all()
+        context["category"] = Category.objects.all()
+        return context 
 
     def get_queryset(self):
-        brand = get_object_or_404(Brand, pk=self.kwargs['pk'])
-        print("brand", brand)
-        if brand:
+        category = self.request.GET.get('category', None)
+        brand = self.request.GET.get('brand', None)
+        # category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        if category == None and brand == None:
+            products = Product.objects.all()
+
+        elif category == None:
             products = Product.objects.filter(Q(brand__name = brand))
-            print("Inside Queryset")
+
+        elif brand == None:
+            products = Product.objects.filter(Q(category__name = category))
+
+        elif  category and brand:
+            products = Product.objects.filter(Q(category__name = category) & Q(brand__name = brand))
+            
+        return products  
+
+class SearchView(BaseListView):
+
+    model = Product
+    template_name = 'userportal/search.html'
+    context_object_name = 'products'
+    # context_object_name = 'q'
+
+    def get_queryset(self):
+        search = self.request.GET.get('q')
+        print("search", search)
+        if search:
+            products = Product.objects.filter(Q(name__icontains=search ) | Q(price__icontains=search) |
+                                             Q(brand__name__icontains=search) | Q(category__name__icontains=search)).order_by('created_at')
         else:
             products = Product.objects.none()
-        print("Products", products)
-        return products  
+        return products
+# Till here   
+
+class SingleProductView(BaseDetailView):
+    model = Product
+    template_name = 'userportal/single_product.html'
+
+
+
 
 
  # def form_valid(self, form):

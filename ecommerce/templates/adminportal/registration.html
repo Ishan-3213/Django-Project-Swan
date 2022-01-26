@@ -15,11 +15,7 @@
                     <div style="color:red;" class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
                         {{ message }}
                     </div>
-                    {% endfor %} {% for message in error %}
-                    <div style="color:red;" class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
+                    {% endfor %} 
                     <form class="uniForm" method="POST" enctype="multipart/form-data">
                         {% csrf_token %} {{ form|crispy }} {{ form_U.as_p }} {{ form_P.as_p }}
                         <!-- <div class="form-group">

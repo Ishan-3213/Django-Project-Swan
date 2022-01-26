@@ -23,36 +23,43 @@
         <div class="col-xl-3 col-lg-4 col-md-5">
             <div class="sidebar-categories">
                 <div class="head">Browse Categories</div>
-                <ul class="main-categories">
-                    <li class="main-nav-list"><a data-toggle="collapse" href="#fruitsVegetable" aria-expanded="false" aria-controls="fruitsVegetable"><span
+                <form action="{% url 'product_urls:categories' %}">
+                    <ul class="main-categories">
+                        <li class="main-nav-list"><a data-toggle="collapse" href="#fruitsVegetable" aria-expanded="false" aria-controls="fruitsVegetable"><span
 								class="lnr lnr-arrow-right"></span>Category</a>
-                        <ul class="collapse" id="fruitsVegetable" data-toggle="collapse" aria-expanded="false" aria-controls="fruitsVegetable">
-                            {% for cat in category %}
-                            <li class="main-nav-list child">
-                                <a href="{% url 'product_urls:categories' cat.id %}">{{cat.name}}</a>
-                            </li>
-                            {% endfor %}
-                            <!-- <li class="main-nav-list child"><a href="#">Dried Fish<span class="number">(09)</span></a></li>
+                            <ul class="collapse" id="fruitsVegetable" data-toggle="collapse" aria-expanded="false" aria-controls="fruitsVegetable">
+                                {% for cat in category %}
+                                <li class="main-nav-list child">
+                                    {% comment %} <a href="{% url 'product_urls:categories' cat.id %}">{{cat.name}}</a> {% endcomment %}
+                                    <input type="radio" name="category" data-id="{{ cat.id }}" value="{{cat.name}}"> {{cat.name}}
+                                </li>
+                                {% endfor %}
+                                <!-- <li class="main-nav-list child"><a href="#">Dried Fish<span class="number">(09)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Fresh Fish<span class="number">(17)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Meat Alternatives<span class="number">(01)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Meat<span class="number">(11)</span></a></li> -->
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
 
-                    <li class="main-nav-list"><a data-toggle="collapse" href="#meatFish" aria-expanded="false" aria-controls="meatFish"><span
+                        <li class="main-nav-list"><a data-toggle="collapse" href="#meatFish" aria-expanded="false" aria-controls="meatFish"><span
 								 class="lnr lnr-arrow-right"></span>Brand</a>
-                        <ul class="collapse" id="meatFish" data-toggle="collapse" aria-expanded="false" aria-controls="meatFish">
-                            {% for br in brand %}
-                            <li class="main-nav-list child"><a href="{% url 'product_urls:brands' br.id %}">{{br.name}}</a></li>
-                            {% endfor %}
-                            <!-- <li class="main-nav-list child"><a href="#">Dried Fish<span class="number">(09)</span></a></li>
+                            <ul class="collapse" id="meatFish" data-toggle="collapse" aria-expanded="false" aria-controls="meatFish">
+                                {% for br in brand %}
+                                <li class="main-nav-list child">
+                                    <input type="radio" name="brand" data-id="{{ br.id }}" value="{{br.name}}"> {{br.name}} {% comment %} <a href="{% url 'product_urls:brands' br.id %}">{{br.name}}</a> {% endcomment %}
+                                </li>
+                                {% endfor %}
+                                <!-- <li class="main-nav-list child"><a href="#">Dried Fish<span class="number">(09)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Fresh Fish<span class="number">(17)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Meat Alternatives<span class="number">(01)</span></a></li>
                             <li class="main-nav-list child"><a href="#">Meat<span class="number">(11)</span></a></li> -->
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
+                        <button type="submit" class="btn">Filter</button>
 
-                </ul>
+
+                    </ul>
+                </form>
             </div>
             <!-- <div class="sidebar-filter mt-50">
                 <div class="top-filter-head">Product Filters</div>
@@ -133,11 +140,11 @@
                     <!-- single product -->
                     <div class="col-lg-4 col-md-6">
                         <div class="single-product">
-                            <a href="{% url 'user_urls:single_product' product.id %}">
+                            <a href="{% url 'product_urls:single_product' product.id %}">
                                 <img class="img-fluid" src="{{ product.image.url }}" style="width:263px;height:280px;" alt="">
                             </a>
                             <div class="product-details">
-                                <a href="{% url 'user_urls:single_product' product.id %}">
+                                <a href="{% url 'product_urls:single_product' product.id %}">
                                     <h6>{{ product.name }}</h6>
                                 </a>
                                 <div class="price">
@@ -146,8 +153,8 @@
                                 </div>
                                 <div class="prd-bottom">
 
-                                    <a href="" class="social-info">
-                                        <span class="ti-bag"></span>
+                                    <a class="social-info">
+                                        <span class="ti-bag" onclick="AddToCart('{{ product.id }}')"></span>
                                         <p class="hover-text">add to bag</p>
                                     </a>
                                     <a href="" class="social-info">
@@ -344,4 +351,4 @@
 </section> -->
 <!-- End related-product Area -->
 
-{% endblock %} {% block scripts %} {% endblock %}
+{% endblock %} {% block scripts %} {% include 'userportal/ajax.html' %} {% endblock %}

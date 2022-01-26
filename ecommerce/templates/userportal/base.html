@@ -52,7 +52,7 @@
                         {% if user.is_superuser %}
                         <li>
                             <a href="{% url 'user_urls:admin_customized' %}" class="nav-link">
-                                <img class="nav-item" src="{% static '../adminportal/images/logo.svg' %}" alt="">
+                                <img class="nav-item" src="{% static 'adminportal/images/logo.svg' %}" alt="">
                             </a>
                         </li>
                         {% endif %}
@@ -70,7 +70,7 @@
                             <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'product_urls:category_list' %}">Shop Category</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'product_urls:categories' %}">Shop Category</a></li>
                                     <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:cart' %}">Shopping Cart</a></li>
                                     <!-- <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li> -->
@@ -109,7 +109,7 @@
         </div>
         <div class="search_input" id="search_input_box">
             <div class="container">
-                <form class="d-flex justify-content-between" action="{% url 'user_urls:search' %}">
+                <form class="d-flex justify-content-between" action="{% url 'product_urls:search' %}">
                     <input type="text" name="q" class="form-control" id="search_input" placeholder="Search Here">
                     <button type="submit" class="btn"></button>
                     <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
@@ -215,7 +215,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
     <script src="{% static 'userportal/js/gmaps.min.js' %}"></script>
     <script src="{% static 'userportal/js/main.js' %}"></script>
-    {% block scripts %} {% endblock %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   {% block scripts %} {% endblock %}   
+
 </body>
 
 </html>

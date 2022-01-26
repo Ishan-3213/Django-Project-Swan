@@ -1,6 +1,8 @@
 from django.db import models
+from django.http import request
 from generic.models import BaseField
 from adminportal.user.models import *
+from django.db.models.query_utils import Q
 
 # Create your models here.
 class Brand(BaseField):
@@ -35,42 +37,34 @@ class Product(BaseField):
             url = ''
         return url
 
-CHOICE = (
-    ('0','No'),
-    ('1', 'Yes')
-           )
 
 class CartItem(BaseField):
 
     user = models.ForeignKey(User, null=True ,on_delete=models.SET_NULL, related_name="cart_user")
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL, related_name="cart_product")
     quantity = models.IntegerField(default=0)
-    purchased = models.CharField(max_length=5, choices=CHOICE, default=0)
+    purchased = models.BooleanField(default=0)
 
     def __str__(self):
         return f"{self.quantity} of {self.product} for {self.user}"
+        
 
     @property
     def get_cart_item(self):
-        orderitem_1 = CartItem.objects.values()
+        orderitem_1 = CartItem.objects.filter(Q(user__username = self.user))
         orderitem = list(orderitem_1)
-        print(orderitem)
         return orderitem
 
     @property
     def get_cart_total(self):
-        total = self.product.price * self.quantity
+        total = self.product.price * int(self.quantity)
         return total
 
     @property
     def get_total(self):
         orderitems = self.get_cart_item
-        total_1 = sum([items.get_cart_total for items in orderitems])
-        cart_total = self.get_cart_total
-        for i in len(cart_total):
-            pass
-            # total_1 = 
-        total = total_1 + int(0.18 * total_1)
+        total_1 = sum([items.get_cart_total for items in orderitems])    
+        total = "%.2f" % (total_1 + float(0.18 * total_1))
         return total
 
 

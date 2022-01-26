@@ -13,7 +13,7 @@
                 <h1>Product Details Page</h1>
                 <nav class="d-flex align-items-center">
                     <a href="{% url 'user_urls:index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a> </nav>
+                    <a>Shop<span class="lnr lnr-arrow-right"></span></a> </nav>
             </div>
         </div>
     </div>
@@ -47,6 +47,7 @@
                         <li><a href="#"><span>Availibility</span> :{{ object.stock }} </a></li>
                     </ul>
                     <p>{{object.detail}}</p>
+
                     <!-- <div class="product_count">
 							<label for="qty">Quantity:</label>
 							<input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
@@ -55,10 +56,17 @@
 							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
 							 class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
 						</div> -->
+                    <div class="quantity_abc" style="padding-bottom: 20px;">
+                        <label for="Quantity" class="h5">Quantity: </label>
+                        <input type="number" title="Quantity" id="quantity" value="1" style="width:50px;height:30px;">
+
+                    </div>
                     <div class="card_area d-flex align-items-center">
-                        <a><button class="btn btn-primary" id="add_to_cart" data-action="add" onclick=" updateuserorder('{{ object.id }}', 'add')">Add To Cart </button></a>
-                        <!-- <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a> -->
-                        <!-- <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a> -->
+
+                        <span class=" icon_btn " onclick="AddToCart( '{{ object.id }}') "><i class="lnr lnr ti-bag "></i></span>
+                        <span class="h4 add-text text-center ">Add to Bag </span>
+
+                        <!-- <a class="icon_btn " href="# "><i class="lnr lnr lnr-heart "></i></a> -->
                     </div>
                 </div>
             </div>
@@ -68,133 +76,133 @@
 <!--================End Single Product Area =================-->
 
 <!-- Start related-product Area -->
-<section class="related-product-area section_gap_bottom">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 text-center">
-                <div class="section-title">
+<section class="related-product-area section_gap_bottom ">
+    <div class="container ">
+        <div class="row justify-content-center ">
+            <div class="col-lg-6 text-center ">
+                <div class="section-title ">
                     <h1> </h1>
                     <p> </p>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r1.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+        <div class="row ">
+            <div class="col-lg-12 ">
+                <!-- <div class="row ">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r1.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r2.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r2.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r3.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r3.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r5.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r5.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r6.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r6.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r7.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r7.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'ecommerce/img/r9.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'ecommerce/img/r9.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r10.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r10.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="{% static 'userportal/img/r11.jpg' %}" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
+                    <div class="col-lg-4 col-md-4 col-sm-6 ">
+                        <div class="single-related-product d-flex ">
+                            <a href="# "><img src="{% static 'userportal/img/r11.jpg' %} " alt=" "></a>
+                            <div class="desc ">
+                                <a href="# " class="title ">Black lace Heels</a>
+                                <div class="price ">
                                     <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                                    <h6 class="l-through ">$210.00</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div> -->
             </div>
-            <!-- <div class="col-lg-3">
-                <div class="ctg-right">
-                    <a href="#" target="_blank">
-                        <img class="img-fluid d-block mx-auto" src="{% static 'userportal/img/category/c5.jpg' %}" alt="">
+            <!-- <div class="col-lg-3 ">
+                <div class="ctg-right ">
+                    <a href="# " target="_blank ">
+                        <img class="img-fluid d-block mx-auto " src="{% static 'userportal/img/category/c5.jpg' %} " alt=" ">
                     </a>
                 </div>
             </div> -->
@@ -202,40 +210,36 @@
     </div>
 </section>
 <!-- End related-product Area -->
-{% endblock %} {% block script %}
+{% endblock %} {% block scripts %}
 <script>
-    function updateuserorder(item_id, action) {
-        // var updateBtns = document.getElementsByClassName('update-cart');
-
-        // for (var i = 0; i < updateBtns.length; i++) {
-
-        // 	updateBtns[i].addEventListener('click', function(){
-        // let button = $(element);
-        // let item_id = button.data("id");
-        // var action = this.dataset.action;
-        console.log('item :', item_id)
+    function AddToCart(item_id) {
+        console.log('item_id :', item_id)
+        quan = document.getElementById("quantity").value;
+        console.log("quantity", quan)
 
         $.ajax({
             method: "POST",
             headers: {
-                'X-CSRFToken': csrftoken
+                "X-CSRFToken": csrftoken,
             },
-            url: "",
+            url: "/add_to_cart/",
             data: {
-                'action': "add",
-                "item": item_id
+                'item_id': item_id,
+                'quantity': quan,
+                'action': 'add'
             },
             success: function(data) {
-                alert("Successfully added");
+                Swal.fire(
+                    'YaY!',
+                    quan + ' item added to the cart!',
+                    'success'
+                )
             },
             error: function(error) {
-                alert("Error!...Something went wrong");
+                alert("Error!...error Something went wrong");
             }
 
         })
-
-        { % endif %
-        }
     }
 
     function getCookie(name) {
@@ -253,7 +257,6 @@
         }
         return cookieValue;
     }
-    const csrftoken = getCookie('csrftoken');
-    }
+    var csrftoken = getCookie('csrftoken');
 </script>
 {% endblock %}

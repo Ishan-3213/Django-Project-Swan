@@ -17,8 +17,8 @@
                                 <h4>Brand: {{ product.brand }}</h4>
                                 <p>{{ product.detail }}</p>
                                 <div class="add-bag d-flex align-items-center">
-                                    <a class="add-btn" href=""><span class="lnr lnr-cross"></span></a>
-                                    <span class="add-text text-uppercase">Add to Bag</span>
+                                    <a class="add-btn"><span onclick="AddToCart('{{ product.id }}')" class="lnr lnr-cross"></span></a>
+                                    <span onclick="AddToCart('{{ product.id }}')" class="add-text text-uppercase">Add to Bag</span>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                     <div class="single-product">
                         <img class="img-fluid" src="{{ item.image.url }}" style="width:263px;height:280px;" alt="">
                         <div class="product-details">
-                            <a href="{% url 'user_urls:single_product' item.id %}">
+                            <a href="{% url 'product_urls:single_product' item.id %}">
                                 <h6>{{ item.name }}</h6>
                             </a>
                             <div class="price">
@@ -213,8 +213,9 @@
 </section>
 <!-- end product Area -->
 
-{% endblock %} {% block scripts %}
-<script>
+{% endblock %} {% block scripts %}    {% include 'userportal/ajax.html' %}
+
+<!-- <script>
     function AddToCart(item_id) {
         console.log('item_id :', item_id)
 
@@ -256,4 +257,5 @@
     var csrftoken = getCookie('csrftoken');
 
     // const csrftoken = getCookie('csrftoken');
-</script> {% endblock %}
+ </script>  -->
+{% endblock %}

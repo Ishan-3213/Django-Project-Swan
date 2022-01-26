@@ -12,7 +12,7 @@ class UserForm(forms.ModelForm):
     phone_number = forms.CharField(max_length=10)
     class Meta():
         model = User
-        fields = ('username', 'password','email','phone_number','profile_pic', 'is_superuser', 'is_staff')
+        fields = ('username', 'password','email','phone_number','profile_pic')
         widgets = { 'username': forms.TextInput(attrs={ 'class' : 'form-group', 
                                             'placeholder': "username*", 
                                             'name': 'display_name',

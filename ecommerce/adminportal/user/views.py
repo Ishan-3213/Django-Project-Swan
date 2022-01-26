@@ -1,84 +1,59 @@
+from tkinter.messagebox import NO
 from django.db.models.query_utils import Q
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.views import View
 from adminportal.product.models import *
 from django.urls import reverse
-from django.views.generic import ListView, DeleteView, UpdateView, DetailView, FormView, TemplateView
+from django.views.generic import ListView, FormView
+from generic.views import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import   UserForm
-from django.contrib.auth.models import User
 from .models import *
-from adminportal.product.models import Product
 from django.contrib.messages.views import SuccessMessageMixin
 
-# Create BaseView For the below classes 
-class AdminUserView(LoginRequiredMixin,ListView):
-    model = User 
-    template_name = 'adminportal/user.html'
-    context_object_name = 'user_data'
+# Create BaseView For the below classes
 
 class HomeView(ListView):
 
     context_object_name = 'items'
     model = Product
     # model = models.ProductImage
-    template_name = 'userportal/index.html'
+    template_name = 'userportal/index.html' 
 
-class AdminHomeView(LoginRequiredMixin, ListView):
+class AdminUserView(BaseListView):
+
+    model = User 
+    template_name = 'adminportal/user.html'
+    context_object_name = 'user_data'
+
+class AdminHomeView(BaseListView):
 
     context_object_name = 'items'
     model = Product
     # model = models.ProductImage
     template_name = 'adminportal/index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["brand"] = Brand.objects.all()
-        return context   
+class UserDetailView(BaseDetailView):
 
-class SearchView(LoginRequiredMixin,ListView):
-
-    model = Product
-    template_name = 'userportal/search.html'
-    context_object_name = 'products'
-    # context_object_name = 'q'
-
-    def get_queryset(self):
-        search = self.request.GET.get('q')
-        print("search", search)
-        if search:
-            products = Product.objects.filter(Q(name__icontains=search ) | Q(price__icontains=search) |
-                                             Q(brand__name=search) | Q(category__name=search)).order_by('created_at')
-        else:
-            products = Product.objects.none()
-        return products
-# Till here   
-
-class SingleProductView(LoginRequiredMixin,DetailView):
-    model = Product
-    template_name = 'userportal/single_product.html'
-
-class UserDetailView(SuccessMessageMixin ,LoginRequiredMixin, DetailView):
     model = User
     template_name = 'adminportal/single_user.html'
 
 class RegisterUser(SuccessMessageMixin, FormView):
+
     form_class = UserForm
     template_name = 'adminportal/registration.html'
     # success_message = "%(name)s was created successfully"
   
-
     def form_valid(self, form):
         user = form.save()
-        user.set_password(user.password)   
+        user.set_password(user.password)
+        user.is_superuser = True
+        user.is_active = True
+        user.is_staff = True   
         user.save()    
-        print("user is saving data")
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        print("Data is invalid") 
-        return super().form_invalid(form)
 
     def get_success_message(self, cleaned_data):
         username = cleaned_data["username"]
@@ -87,7 +62,8 @@ class RegisterUser(SuccessMessageMixin, FormView):
     def get_success_url(self):
         return reverse('user_urls:login_1')
 
-class UpdateUser(SuccessMessageMixin, UpdateView):
+class UpdateUser(BaseUpdateView):
+
     model = User
     form_class = UserForm
     template_name = 'adminportal/update.html'
@@ -104,82 +80,93 @@ class UpdateUser(SuccessMessageMixin, UpdateView):
         username = cleaned_data["username"]
         return username + " Updated Successfully..!!"
   
-
     def get_success_url(self):
         return reverse('user_urls:user_data')
 
-class DeleteUser(DeleteView):
+class DeleteUser(BaseDeleteView):
+
     model = User
-    template_name = 'adminportal/proddel.html'
+    template_name = 'userportal/proddel.html'
     context_object_name = 'delete_product'
 
+    def get_success_message(self, cleaned_data):
+        return "Deleted Successfully..!!"
+
     def get_success_url(self):
         return reverse('user_urls:user_data')
 
-class AddToCartView(SuccessMessageMixin, LoginRequiredMixin, TemplateView):
+class CartListView(BaseListView):
 
-    def cart_view(request, *args, **kwargs):
+    model = CartItem
+    template_name = 'userportal/cart.html'
+    context_object_name = 'items'
 
-        user = User.objects.filter(username = request.user).first()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["cart_total"] = CartItem(user = self.request.user)
+        return context
+
+    def get_queryset(self):
+        user = User.objects.filter(username = self.request.user).first()
         print("user", user)
+        queryset = CartItem.objects.filter(Q(user__username = user))
+        return queryset
+    
+class AddToCartView(LoginRequiredMixin, View):
 
-        order = CartItem.objects.filter(Q(user__username = user))
-        print("order", order)
-
-        # cart_item, created = CartItem.objects.get_or_create(user=request.user)[0]
-        # print("cart_item", cart_item)
-
-        # items = order.cartitem_set.all()
-        # print("items", items)
-
-        context = {'items': order}
-        return render(request, 'userportal/cart.html', context=context)
-
-
-    def add_to_cart(request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
 
         item_id = request.POST.get('item_id')
         action = request.POST.get('action')
-
-        product, created = Product.objects.get_or_create(id = item_id)
-        print("item", product)
+        quan = int(request.POST.get('quantity', 1))
+        # print("quan", quan)
+        try:
+            product = Product.objects.get(id = item_id)
+        except Exception as e:
+            product = None
 
         user = User.objects.filter(username = request.user).first()
-        print("user", user)
+        # print("user", user)
 
         cart_item, created = CartItem.objects.get_or_create(user = user, product = product)
-        print("order", cart_item)
+        # cart_object = CartItem(product = product, user = user)
+        # print("cart-object", cart_object)
+        # cart_object.delete()
+        # print("cart-object", cart_object)
 
-        # cart = CartItem.objects.values()
-        # data = list(cart)
-        # print("cart", data)
-        # data = serializers.serialize('json', cart)
-
+        print("CART_ITEM------->>>>", cart_item)
+      
         cart_total = []
-        print("Before cart_item_Total price", cart_total)
+        get_cart_total = []
+        # print("Before cart_item_Total price", cart_item.quantity)
 
         if action == "add":
-            cart_item.quantity += 1
-            cart_total = cart_item.get_cart_total
-            # cart_total.append(True)
-            print("quntity added by 1: ", cart_total)
+            if quan > 1:
+                cart_item.quantity = cart_item.quantity + quan
+                cart_total = cart_item.get_cart_total
+            else:
+                cart_item.quantity += 1
+                cart_total = cart_item.get_cart_total
 
             cart_item.save()
         
         elif action == "remove":
-            cart_item.quantity -= 1
-            cart_total = cart_item.get_cart_total
-            # cart_total.append(True)
-            print("quntity removed by 1: ", cart_total)
-            cart_item.save()
-        else:
-            print("Something's wrong with the action..!!")
+            if cart_item.quantity == 0:
+                print("cart_item", cart_item)
+                # cart_item.delete(item_id)
+                cart_item.save()
+                cart_total = cart_item.get_cart_total
 
-        print(" After cart_item_Total price ", item_id)
-        
+            else:
+                cart_item.quantity -= 1
+                cart_total = cart_item.get_cart_total
+                cart_item.save()
+
+        # print("After cart item quan", cart_item.quantity)
+        get_cart_total = cart_item.get_total
         cart_item.save()
         print("cart_item", cart_item)
-        return JsonResponse({"cart_total" : cart_total, "item_id":item_id}) 
+        return JsonResponse({"product_total" : cart_total, "item_id":item_id, "get_cart_total" : get_cart_total}) 
 
 
         

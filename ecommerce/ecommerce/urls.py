@@ -24,6 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin_customized/', AdminHomeView.as_view(), name='admin_customized'),
     path('',include('adminportal.user.urls')),
-    path ('product/',include('adminportal.product.urls')),
+    path ('',include('adminportal.product.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
