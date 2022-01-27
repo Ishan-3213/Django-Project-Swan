@@ -53,6 +53,9 @@
                 {% endfor %} {% else %}
                 <div class="container">
                     <h2> The search you are looking for: {{ q }} Not Exist </h2>
+                    <div class="prd-bottom">
+                        <a style="margin-left: 30%;" class=" fa fa-home btn btn-outline-primary float-left" href="{% url 'user_urls:index' %}" type="button"> Home Page</a>
+                    </div>
                 </div>
                 {% endif %}
             </div>

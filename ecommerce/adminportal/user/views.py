@@ -1,16 +1,13 @@
-from tkinter.messagebox import NO
 from django.db.models.query_utils import Q
 from django.http import JsonResponse
 from django.views import View
-from adminportal.product.models import *
-from django.urls import reverse
-from django.views.generic import ListView, FormView
+from django.urls import reverse, reverse_lazy 
+from django.views.generic import ListView
 from generic.views import *
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from .forms import   UserForm
+from django.contrib.auth.views import LoginView
 from .models import *
-from django.contrib.messages.views import SuccessMessageMixin
+from adminportal.product.models import *
 
 # Create BaseView For the below classes
 
@@ -21,27 +18,53 @@ class HomeView(ListView):
     # model = models.ProductImage
     template_name = 'userportal/index.html' 
 
+class AdminHomeView(PermissionRequiredMixin, BaseListView):
+
+    raise_exception = False
+    permission_required = 'is_staff'
+    redirect_field_name = 'next'
+    model = Product
+    # model = models.ProductImage
+    context_object_name = 'items'
+    template_name = 'adminportal/index.html'
+
+    def dispatch(self, request, *args, **kwargs):
+            if not self.request.user.is_staff:
+                # path_redirect = request.get_full_path().split('?next=',1)
+                # print("------------------->>>", path_redirect)
+                # if '?next=' in request.get_full_path():# Redirecting After Login 
+                #     print("<------- inside if")
+                #     # return redirect(path_redirect)
+                #     return redirect_to_login(self.path_redirect, self.get_login_url(), self.get_redirect_field_name()) 
+                # else:
+                return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name()) 
+
+            if not self.has_permission():
+                return redirect('/login/')
+                
+            return super(AdminHomeView, self).dispatch(request, *args ,**kwargs)
+
 class AdminUserView(BaseListView):
 
     model = User 
     template_name = 'adminportal/user.html'
-    context_object_name = 'user_data'
-
-class AdminHomeView(BaseListView):
-
-    context_object_name = 'items'
-    model = Product
-    # model = models.ProductImage
-    template_name = 'adminportal/index.html'
+    context_object_name = 'user_data'   
+        
 
 class UserDetailView(BaseDetailView):
 
     model = User
     template_name = 'adminportal/single_user.html'
 
-class RegisterUser(SuccessMessageMixin, FormView):
+class AdminLoginView(LoginView):
 
-    form_class = UserForm
+    template_name='adminportal/login.html'
+
+    def get_success_url(self):
+        return reverse_lazy('user_urls:admin_customized')
+
+class RegisterAdminUserView(BaseRegisterView):
+
     template_name = 'adminportal/registration.html'
     # success_message = "%(name)s was created successfully"
   
@@ -54,18 +77,14 @@ class RegisterUser(SuccessMessageMixin, FormView):
         user.save()    
         return super().form_valid(form)
 
-
-    def get_success_message(self, cleaned_data):
-        username = cleaned_data["username"]
-        return username + " Created Successfully..!!"
-
     def get_success_url(self):
         return reverse('user_urls:login_1')
+
 
 class UpdateUser(BaseUpdateView):
 
     model = User
-    form_class = UserForm
+    form_class = AdminForm
     template_name = 'adminportal/update.html'
     # success_message = "%(username)s was created successfully"
 
@@ -136,8 +155,8 @@ class AddToCartView(LoginRequiredMixin, View):
 
         print("CART_ITEM------->>>>", cart_item)
       
-        cart_total = []
-        get_cart_total = []
+        cart_total = cart_item.get_cart_total
+        get_cart_total = cart_item.get_total
         # print("Before cart_item_Total price", cart_item.quantity)
 
         if action == "add":
@@ -151,12 +170,12 @@ class AddToCartView(LoginRequiredMixin, View):
             cart_item.save()
         
         elif action == "remove":
-            if cart_item.quantity == 0:
+            if cart_item.quantity <= 1:
                 print("cart_item", cart_item)
-                # cart_item.delete(item_id)
-                cart_item.save()
-                cart_total = cart_item.get_cart_total
-
+                cart_item.delete()
+                # cart_item.save()
+                # cart_total = cart_item.get_cart_total 
+                return JsonResponse({"product_total" : cart_total, "item_id":item_id, "get_cart_total" : get_cart_total}) 
             else:
                 cart_item.quantity -= 1
                 cart_total = cart_item.get_cart_total

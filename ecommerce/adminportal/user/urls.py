@@ -18,8 +18,13 @@ urlpatterns = [
     path('user_delete/<int:pk>', DeleteUser.as_view(), name='user_delete'),
     path('single_user/<pk>', UserDetailView.as_view(),name='single_user'),
 
-    path('registration/',RegisterUser.as_view(), name='registration'),
-    path('login/', LoginView.as_view(template_name='adminportal/login.html'), name='login_1'),
-    path('logout/', LogoutView.as_view(template_name='adminportal/login.html'), name='logout'),
+    path('user-registration/',BaseRegisterView.as_view(), name='user_registration'),
+    path('login/', LoginView.as_view(template_name='userportal/login.html', success_url = '/admin_customized/'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='userportal/login.html'), name='logout'),
+
+
+    path('registration/',RegisterAdminUserView.as_view(), name='registration'),
+    path('login-1/', AdminLoginView.as_view(), name='login_1'),
+    path('logout-1/', LogoutView.as_view(template_name='adminportal/login.html'), name='logout_1'),
 
 ]

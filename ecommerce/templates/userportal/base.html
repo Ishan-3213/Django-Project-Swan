@@ -41,22 +41,13 @@
             <nav class="navbar navbar-expand-lg navbar-light main_box">
                 <div class="container">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Portal</a>
+                    {% if user.is_superuser %}
 
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{% url 'user_urls:index' %}" class="nav-link">
-                                <img class="fixed nav-item" src="{% static 'userportal/img/logo.png' %}" alt="">
-                            </a>
-                        </li>
-                        {% if user.is_superuser %}
-                        <li>
-                            <a href="{% url 'user_urls:admin_customized' %}" class="nav-link">
-                                <img class="nav-item" src="{% static 'adminportal/images/logo.svg' %}" alt="">
-                            </a>
-                        </li>
-                        {% endif %}
-                    </ul>
+                    <a href="{% url 'user_urls:admin_customized' %}" class="nav-link"><b> Admin </b></a> {% else %}
+                    <a href="{% url 'user_urls:index' %}" class="nav-link">
+                        <img class="fixed nav-item" src="{% static 'userportal/img/logo.png' %}" alt="">
+                    </a>
+                    {% endif %}
 
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
@@ -67,40 +58,34 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item active"><a class="nav-link" href="{% url 'user_urls:index' %}">Home</a></li>
-                            <li class="nav-item submenu dropdown">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'product_urls:categories' %}">Filter</a></li>
+
+                            <!-- <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'product_urls:categories' %}">Shop Category</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:cart' %}">Shopping Cart</a></li>
-                                    <!-- <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li> -->
+                                    <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li> 
+                                    <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:cart' %}">Cart</a></li>
                                 </ul>
                             </li>
-                            <!-- <li class="nav-item submenu dropdown">
+                            <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                                     <li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
                                 </ul>
                             </li> -->
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
-                                <ul class="dropdown-menu">
-                                    {% if user.is_authenticated %}
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:logout' %}">Log Out</a></li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:logout' %}"><b> Log Out </b></a></li>
 
-                                    {% else %}
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:login_1' %}">Login</a></li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_urls:login' %}"><b>Log In</b></a></li>
 
-                                    {% endif %}
-                                    <!-- <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li> -->
-                                </ul>
-                            </li>
+                            {% endif %}
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a href="#" class="cart"><span class="ti-bag"></span></a></li>
+                            <li class="nav-item"><a href="{% url 'user_urls:cart' %}" class="cart"><span class="ti-bag"></span></a></li>
                             <li class="nav-item"><button class="search"><span name="q" class="lnr lnr-magnifier" id="search"></span></button></li>
                         </ul>
                     </div>
@@ -159,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3  col-md-6 col-sm-6">
+                <!-- <div class="col-lg-3  col-md-6 col-sm-6">
                     <div class="single-footer-widget mail-chimp">
                         <h6 class="mb-20">Instragram Feed</h6>
                         <ul class="instafeed d-flex flex-wrap">
@@ -185,7 +170,7 @@
                             <a href="#"><i class="fa fa-behance"></i></a>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
                 <p class="footer-text m-0">
@@ -216,7 +201,7 @@
     <script src="{% static 'userportal/js/gmaps.min.js' %}"></script>
     <script src="{% static 'userportal/js/main.js' %}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   {% block scripts %} {% endblock %}   
+    {% block scripts %} {% endblock %}
 
 </body>
 

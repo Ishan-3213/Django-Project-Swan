@@ -44,7 +44,7 @@
                                             <div class="pl-md-0 pl-2">
                                                 <span id="mybtn" onclick="updateuserorder('{{ prod.product.id }}','add')" class="fa fa-plus-square text-secondary"></span>
                                                 <!-- <span class="px-md-3 px-1" id="item_update{{ prod.product.id }}">{{ prod.quantity }}</span> -->
-                                                <input id="item_update{{ prod.product.id }}" type="number" value="{{ prod.quantity }}" style="width:30px;height:30px;border: hidden;">
+                                                <input id="item_update{{ prod.product.id }}" type="number" value="{{ prod.quantity }}" style="width:39px;height:30px;border: hidden;">
                                                 <span id="mybtn" onclick="updateuserorder('{{ prod.product.id }}','remove')" class="fa fa-minus-square text-secondary"></span>
 
                                             </div>
@@ -102,21 +102,6 @@
 <script>
     function updateuserorder(item_id, action) {
 
-        // if (action == "add") {
-        //     if (!isNaN(result.value))
-        //         result.value++;
-
-        // } else if (action == "remove") {
-        //     if (!isNaN(result.value) && result.value > 0) {
-        //         result.value--;
-        //     } else if (!isNaN(result.value) && result.value == 0) {
-        //         alert('Thank you for your purchase');
-        //         document.getElementById("cart").deleteRow(document.getElementById(item_id));
-
-        //         console.log("row " + item_id + " deleted");
-        //     }
-
-        // }
 
         console.log('item:', item_id);
         console.log('action', action)
@@ -150,7 +135,9 @@
                         result.value++;
 
                 } else if (action == "remove") {
-                    if (!isNaN(result.value) && result.value > 0) {
+                    if (result.value <= 1) {
+                        location.reload()
+                    } else if (!isNaN(result.value) && result.value > 0) {
                         result.value--;
                     }
                     // else if (!isNaN(result.value) && result.value == 0) {

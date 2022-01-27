@@ -1,6 +1,5 @@
-from django.views.generic import CreateView, DeleteView, UpdateView, ListView
+from django.views.generic import  ListView
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from generic.views import *
 # from ecommerce.adminportal.product.models import ProductImage
@@ -40,7 +39,7 @@ class DeleteCategoryView(BaseDeleteView):
 
     model = Category
    
-class CategoryBrandFilterView(BaseListView):
+class CategoryBrandFilterView(ListView):
 
     model = Product
     template_name = 'userportal/category.html'
@@ -56,18 +55,15 @@ class CategoryBrandFilterView(BaseListView):
         category = self.request.GET.get('category', None)
         brand = self.request.GET.get('brand', None)
         # category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        if category == None and brand == None:
-            products = Product.objects.all()
+        products = Product.objects.all()
 
-        elif category == None:
-            products = Product.objects.filter(Q(brand__name = brand))
+        if category and not brand:
+            products = products.filter(Q(category__name = category) )
+        elif not category and brand:
+            products = products.filter(Q(brand__name = brand))        
+        elif category and brand:
+            products = products.filter(Q(category__name = category) & Q(brand__name = brand))
 
-        elif brand == None:
-            products = Product.objects.filter(Q(category__name = category))
-
-        elif  category and brand:
-            products = Product.objects.filter(Q(category__name = category) & Q(brand__name = brand))
-            
         return products  
 
 class SearchView(BaseListView):
@@ -86,7 +82,6 @@ class SearchView(BaseListView):
         else:
             products = Product.objects.none()
         return products
-# Till here   
 
 class SingleProductView(BaseDetailView):
     model = Product

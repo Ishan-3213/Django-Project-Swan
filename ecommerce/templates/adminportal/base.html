@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <a class="navbar-brand brand-logo" href="{% url 'user_urls:index' %}">
-                        <img src="{% static 'adminportal/images/logo.svg' %}" alt="logo" />
+                        <img src="{% static 'userportal/img/logo.png' %}" alt="logo" />
                     </a>
                     <a class="navbar-brand brand-logo-mini" href="index.html">
                         <img src="{% static 'adminportal/images/logo-mini.svg' %}" alt="logo" />
@@ -378,45 +378,47 @@
                 </div>
             </div>
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
+
                 <ul class="nav" style="position: fixed;">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_urls:admin_customized' %}">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
-                            <span class="menu-title">Home</span>
+                        <a class="nav-link" href="{% url 'user_urls:user_data' %}">
+                            <i class="mdi mdi-account menu-icon"></i>
+                            <span class="menu-title">Users</span>
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_urls:user_data' %}">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
-                            <span class="menu-title">Users</span>
+                        <a class="nav-link" href="{% url 'user_urls:admin_customized' %}">
+                            <i class="mdi mdi-candycane menu-icon"></i>
+                            <span class="menu-title">Products</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'product_urls:brand' %}">
-                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <i class="menu-icon mdi mdi-arrow-right-thick"></i>
                             <span class="menu-title">Brand</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'product_urls:category' %}">
-                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <i class="menu-icon mdi mdi-arrow-right-thick"></i>
                             <span class="menu-title">Category</span>
                             <i class="menu-arrow"></i>
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_urls:admin_customized' %}">
+                            <i class="mdi mdi-alert menu-icon"></i>
+                            <span class="menu-title">Cart Item</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
 
                         {% if user.is_authenticated %}
 
                         <a class="nav-link" href="{% url 'user_urls:logout' %}">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                             <span class="menu-title">Logout</span>
-                        </a>
-                        {% else %}
-                        <a class="nav-link" href="{% url 'user_urls:login_1' %}">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
-                            <span class="menu-title">Login</span>
                         </a>
                         {% endif %}
                     </li>

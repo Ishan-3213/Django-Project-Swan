@@ -154,6 +154,6 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'user.User'
 
-LOGIN_URL = 'user_urls:login_1'
+LOGIN_URL = 'user_urls:login'
 LOGIN_REDIRECT_URL = '/'
 

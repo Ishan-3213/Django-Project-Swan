@@ -12,18 +12,18 @@
 
                         <div class="table-responsive">
                             {% for message in messages %}
-                            <div style="color:rgb(1, 9, 119);" class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+                            <div style="color:rgb(1, 9, 119);" class="alert alert-success alert-dismissible" role="alert">
                                 {{ message }}
                             </div>
                             {% endfor %}
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Customer Image</th>
-                                        <th>Customer Name</th>
-                                        <th>Customer Email</th>
-                                        <th>Customer Number</th>
-                                        <th>Customer Edit/ <br> Delete </th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Number</th>
+                                        <th>Edit/Delete </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,7 +33,14 @@
                                         <td>{{prod.username}}</td>
                                         <td>{{prod.email}}</td>
                                         <td>{{prod.phone_number}}</td>
-                                        <td><a href="{% url 'user_urls:user_update' prod.id %}" type="button" class="btn btn-warning" value="edit">Edit</a> <a href="{% url 'user_urls:user_delete' prod.id %}" type="button" class="btn btn-danger" value="delete">Delete</a>
+                                        <td>
+                                            <a href="{% url 'user_urls:user_update' prod.id %}" type="button" class="btn btn-warning" style="padding: 6px;">
+                                                <span class="mdi mdi-grease-pencil"></span>
+                                            </a>
+                                            <a style="padding: 5px;"> </a>
+                                            <a href="{% url 'user_urls:user_delete' prod.id %}" type="button" class="btn btn-danger" style="padding: 6px;">
+                                                <span class="mdi mdi-delete-empty"></span>
+                                            </a>
                                         </td>
                                     </tr>
                                     {% endfor %} {% else %}

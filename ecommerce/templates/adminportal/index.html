@@ -8,21 +8,25 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title"><a style="margin-left: 85%;" class="btn btn-outline-primary float-left" href="{% url 'product_urls:product_creation' %}" type="button">Add Product</a>Product Table</h4>
+                        <h4 class="card-title">
+                            <a style="margin-left: 85%;" class="btn btn-outline-primary float-left" href="{% url 'product_urls:product_creation' %}" type="button">
+                                Add Product
+                            </a> Product Table
+                        </h4>
                         <div class="table-responsive">
                             {% for message in messages %}
-                            <div style="color:rgb(1, 9, 119);" class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+                            <div style="color:rgb(1, 9, 119);" class="alert alert-success alert-dismissible" role="alert">
                                 {{ message }}
                             </div>
                             {% endfor %}
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Product Image</th>
-                                        <th>Product Name</th>
-                                        <th>Product Price/<br> Stock </th>
-                                        <th>Product Brand/<br> Category</th>
-                                        <th>Product Edit/ <br> Delete </th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Price/Stock </th>
+                                        <th>Brand/Category</th>
+                                        <th>Edit/Delete </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,7 +36,14 @@
                                         <td>{{prod.name}}</td>
                                         <td>{{prod.price}} / {{prod.stock}}</td>
                                         <td>{{prod.brand}}/{{prod.category}}</td>
-                                        <td><a type="button" href="{% url 'product_urls:update' prod.id %}" class="btn btn-warning" value="edit">Edit</a> <a href="{% url 'product_urls:delete' prod.id %}" type="button" class="btn btn-danger" value="delete">Delete</a>
+                                        <td>
+                                            <a href="{% url 'product_urls:update' prod.id %}" type="button" class="btn btn-warning" style="padding: 6px;">
+                                                <span class="mdi mdi-grease-pencil"></span>
+                                            </a>
+                                            <a style="padding: 5px;"> </a>
+                                            <a href="{% url 'product_urls:delete' prod.id %}" type="button" class="btn btn-danger" style="padding: 6px;">
+                                                <span class="mdi mdi-delete-empty"></span>
+                                            </a>
                                         </td>
                                     </tr>
                                     {% endfor %} {% endif %}

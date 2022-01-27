@@ -122,7 +122,7 @@
                 <!-- single product -->
                 <div class="col-lg-3 col-md-6">
                     <div class="single-product">
-                        <img class="img-fluid" src="{{ item.image.url }}" style="width:263px;height:280px;" alt="">
+                        <a href="{% url 'product_urls:single_product' item.id %}"><img class="img-fluid" src="{{ item.image.url }}" style="width:263px;height:280px;" alt=""></a>
                         <div class="product-details">
                             <a href="{% url 'product_urls:single_product' item.id %}">
                                 <h6>{{ item.name }}</h6>
@@ -149,7 +149,7 @@
                                     <span class="lnr lnr-sync"></span>
                                     <p class="hover-text">compare</p>
                                 </a>
-                                <a href="" class="social-info">
+                                <a href="{% url 'product_urls:single_product' item.id %}" class="social-info">
                                     <span class="lnr lnr-move"></span>
                                     <p class="hover-text">view more</p>
                                 </a>
@@ -213,7 +213,7 @@
 </section>
 <!-- end product Area -->
 
-{% endblock %} {% block scripts %}    {% include 'userportal/ajax.html' %}
+{% endblock %} {% block scripts %} {% include 'userportal/ajax.html' %}
 
 <!-- <script>
     function AddToCart(item_id) {

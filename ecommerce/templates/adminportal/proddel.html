@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Delete Product ??</h4>
                         <form class="form-row" method="POST">
-                            {% csrf_token %} You Sure Want to Delete the product with the price : {{ delete_product.name }} / {{ delete_product.price }}??
+                            {% csrf_token %} You Sure Want to Delete the product : <b> {{ delete_product.name }} / {{ delete_product.price }}?? </b>
                             <div class="mt-3">
                                 <input class="btn btn-danger" type="submit" value="Delete" />
                                 <a href="{% url 'user_urls:admin_customized' %}"><input class="btn btn-primary" type="button" name="Cancel" value="Cancel" /> </a>
