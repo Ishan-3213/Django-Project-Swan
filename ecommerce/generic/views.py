@@ -11,8 +11,69 @@ from django.contrib.auth.views import redirect_to_login
 
 # Create your views here.
 
-#--------------------Product Base Class-------------------------#
-class BaseCreateView(SuccessMessageMixin, CreateView, ListView):
+#------------------------------User Base Class------------------------------------#
+
+class BaseRegisterView(SuccessMessageMixin, FormView):
+
+    form_class = UserForm
+    template_name = 'userportal/registration.html'
+  
+    def form_valid(self, form):
+        user = form.save()
+        user.set_password(user.password)  
+        user.save()    
+        return super().form_valid(form)
+
+    def get_success_message(self, cleaned_data):
+        username = cleaned_data["username"]
+        return username + " - User Created Successfully..!!"
+
+    def get_success_url(self):
+        return reverse('user_urls:login')
+
+class BaseListView(LoginRequiredMixin, ListView):
+    pass
+
+class BaseDetailView(LoginRequiredMixin,DetailView):
+    pass
+
+class BaseAdminMixin(PermissionRequiredMixin):
+    
+    raise_exception = True
+    permission_required = 'is_staff'
+    redirect_field_name = 'next' 
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if not self.request.user.is_authenticated:
+            return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name()) 
+
+        if not self.has_permission():
+            return redirect('/login-1/')
+        return super(BaseAdminMixin, self).dispatch(request, *args ,**kwargs)
+
+    '''def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to do this")
+        return super(BaseAdminMixin, self).handle_no_permission()
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            path_redirect = request.get_full_path().split('?next=',1)
+            print("------------------->>>", path_redirect)
+            if '?next=' in request.get_full_path():# Redirecting After Login 
+                print("<------- inside if")
+                return redirect(path_redirect)
+            else:
+                print("><><><>< oiut side else")
+                return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name()) 
+        if not self.has_permission():
+            return redirect('/login/')
+        return super(BaseAdminMixin, self).dispatch(request, *args ,**kwargs)'''
+
+
+#------------------------------Product Base Class------------------------------------#
+
+class BaseCreateView(BaseAdminMixin, SuccessMessageMixin, CreateView, ListView):
     model = Product
     form_class = ProductAddForm
     template_name = "adminportal/product_creation.html"
@@ -48,52 +109,7 @@ class BaseDeleteView(SuccessMessageMixin, DeleteView):
     def get_success_url(self):
         return reverse('user_urls:admin_customized')
 
-#--------------------User Base Class-------------------------#
-class BaseRegisterView(SuccessMessageMixin, FormView):
-
-    form_class = UserForm
-    template_name = 'userportal/registration.html'
-  
-    def form_valid(self, form):
-        user = form.save()
-        user.set_password(user.password)  
-        user.save()    
-        return super().form_valid(form)
-
-    def get_success_message(self, cleaned_data):
-        username = cleaned_data["username"]
-        return username + " - User Created Successfully..!!"
-
-    def get_success_url(self):
-        return reverse('user_urls:login')
-
-class BaseListView(LoginRequiredMixin, ListView):
-    pass
-
-class BaseDetailView(LoginRequiredMixin,DetailView):
-    pass
-
-# class BaseAdminMixin(PermissionRequiredMixin):
-#     raise_exception = False
-#     permission_required = 'is_staff'
-#     redirect_field_name = 'next' 
-
-#     def handle_no_permission(self):
-#         messages.error(self.request, "You don't have permission to do this")
-#         return super(BaseAdminMixin, self).handle_no_permission()
 
 
-#     def dispatch(self, request, *args, **kwargs):
-#         if not self.request.user.is_staff:
-#             path_redirect = request.get_full_path().split('?next=',1)
-#             print("------------------->>>", path_redirect)
-#             if '?next=' in request.get_full_path():# Redirecting After Login 
-#                 print("<------- inside if")
-#                 return redirect(path_redirect)
-#             else:
-#                 print("><><><>< oiut side else")
-#                 return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name()) 
-#         if not self.has_permission():
-#             return redirect('/login/')
-#         return super(BaseAdminMixin, self).dispatch(request, *args ,**kwargs)
+
     

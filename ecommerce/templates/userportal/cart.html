@@ -32,6 +32,7 @@
                                         <th>Product Price</th>
                                         <th>Product Add/Remove</th>
                                         <th>Product Total</th>
+                                        <th>Remove Item</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,6 +55,11 @@
                                             <i onclick="updateuserorder('{{ prod.product.id }}','remove')" class="fa fa-minus-square text-secondary"></i> -->
                                         </td>
                                         <td id="cart_total{{ prod.product.id }}" style="color:black;font-size: 16px;">{{ prod.get_cart_total }}</td>
+                                        <td>
+                                            <a type="button" class="btn btn-danger" style="padding: 6px; color: white;">
+                                                <span onclick="updateuserorder('{{ prod.product.id }}','delete')" class="ti-trash"></span>
+                                            </a>
+                                        </td>
                                     </tr>
                                     {% endfor %} {% endif %}
                                     <tr>
@@ -80,7 +86,8 @@
                                         </td>
                                         <td>
                                             <div class="checkout_btn_inner d-flex align-items-center">
-                                                <a class="gray_btn" href="{% url 'user_urls:index' %}">Continue Shopping</a> {% comment %}<a class="primary-btn" href="{% url 'ecommerce:checkout' %}">Proceed to checkout</a>{% endcomment %}
+                                                <a class="gray_btn" href="{% url 'user_urls:index' %}">Continue Shopping</a>
+                                                <a class="primary-btn" href="{% url 'user_urls:checkout' %}">Proceed to checkout</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -118,9 +125,9 @@
                 'item_id': item_id
             },
             success: function(data) {
-                console.log(data.item_id)
-                console.log(data.product_total)
-                console.log(data.get_cart_total)
+                // console.log(data.item_id)
+                // console.log(data.product_total)
+                // console.log(data.get_cart_total)
 
                 var product_total = document.getElementById('cart_total' + item_id);
                 product_total.innerHTML = data.product_total
@@ -140,12 +147,8 @@
                     } else if (!isNaN(result.value) && result.value > 0) {
                         result.value--;
                     }
-                    // else if (!isNaN(result.value) && result.value == 0) {
-                    //     alert('Thank you for your purchase');
-                    //     document.getElementById("cart").deleteRow(document.getElementById(item_id));
-
-                    //     console.log("row " + item_id + " deleted");
-                    // }
+                } else if (action == "delete") {
+                    location.reload()
 
                 }
             },

@@ -1,5 +1,5 @@
+from pyexpat import model
 from django.db import models
-from django.http import request
 from generic.models import BaseField
 from adminportal.user.models import *
 from django.db.models.query_utils import Q
@@ -40,15 +40,14 @@ class Product(BaseField):
 
 class CartItem(BaseField):
 
-    user = models.ForeignKey(User, null=True ,on_delete=models.SET_NULL, related_name="cart_user")
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL, related_name="cart_product")
+    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name="cart_user")
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="cart_product")
     quantity = models.IntegerField(default=0)
-    purchased = models.BooleanField(default=0)
+    purchased = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.quantity} of {self.product} for {self.user}"
         
-
     @property
     def get_cart_item(self):
         orderitem_1 = CartItem.objects.filter(Q(user__username = self.user))
@@ -67,8 +66,33 @@ class CartItem(BaseField):
         total = "%.2f" % (total_1 + float(0.18 * total_1))
         return total
 
+class Address(BaseField):
 
+    user_name = models.ForeignKey(User, null=True,  on_delete=models.CASCADE, related_name="user_name")
+    address = models.CharField(max_length=256)
+    address_type = models.CharField(max_length=10, default="Home")
+    city_name = models.CharField(max_length=50)
+    country_name = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=6)
 
+    def __str__(self):
+        return f"{self.address_type} with {self.address}  "
+
+class Order(BaseField):
+
+    user = models.ForeignKey(User, null=True,  on_delete=models.SET_NULL, related_name="user_order")
+    address = models.ManyToManyField(Address, related_name="order_address")
+    purchased = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user}-{self.get_purchased_display()} "
+
+    @property
+    def get_order_total(self):
+        orderitems = self.cartitem_set.all()
+        total = sum([items.get_cart_total for items in orderitems]) 
+        # total = total_1 + int(0.18 * total_1)
+        return total
 
 
 # class ProductImage(BaseField):

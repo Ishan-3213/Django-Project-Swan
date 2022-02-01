@@ -6,7 +6,10 @@ from generic.views import *
 from django.db.models.query_utils import Q
 
 # Create your views here.
-class BrandCreateView(BaseCreateView):
+
+#------------------------------Product-Brand------------------------------------#
+
+class BrandCreateView(BaseCreateView, BaseAdminMixin):
 
     form_class = ProductBrandForm
     model = Brand
@@ -14,31 +17,36 @@ class BrandCreateView(BaseCreateView):
     # success_url = '/admin_customized/'
     context_object_name = 'brand'
 
-class UpdateBrandView(BaseUpdateView):
+class UpdateBrandView(BaseAdminMixin, BaseUpdateView):
 
     model = Brand
     form_class = ProductBrandForm
 
-class DeleteBrandView(BaseDeleteView):
+class DeleteBrandView(BaseAdminMixin, BaseDeleteView):
 
     model = Brand
 
-class CategoryCreateView(BaseCreateView):
+
+#------------------------------Product-Category------------------------------------#
+
+class CategoryCreateView(BaseCreateView, BaseAdminMixin):
 
     form_class = ProductCategoryForm
     model = Category
     template_name = "adminportal/category.html"
     context_object_name = 'category'
 
-class UpdateCategoryView(BaseUpdateView):
+class UpdateCategoryView(BaseAdminMixin, BaseUpdateView):
 
     model = Category
     form_class = ProductCategoryForm
 
-class DeleteCategoryView(BaseDeleteView):
+class DeleteCategoryView(BaseAdminMixin,BaseDeleteView):
 
     model = Category
-   
+
+#------------------------------Product-Filter/Search/Single-Product------------------------------------#
+
 class CategoryBrandFilterView(ListView):
 
     model = Product

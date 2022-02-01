@@ -22,7 +22,20 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'adminportal/css/vertical-layout-light/style.css' %}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{% static 'adminportal/images/favicon.png' %}" /> {% block head %} {% endblock %}
+    <link rel="shortcut icon" href="{% static 'adminportal/images/favicon.png' %}" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JKMMT3PCN9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-JKMMT3PCN9');
+    </script>
+    {% block head %} {% endblock %}
 </head>
 
 <body>
