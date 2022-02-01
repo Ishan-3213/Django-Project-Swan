@@ -162,7 +162,7 @@ class EmailSendView(View):
         carts = CartItem.objects.filter(Q(user__username = user))
         print('cart', carts)
 
-        # task.checkout(user_id=user.id)
+        task.checkout(user_id=user.id)
         cart_total = CartItem(user = self.request.user)
         context = {'carts': carts, 'cart_total' : cart_total}
         return render(request, 'userportal/confirmation.html', context)

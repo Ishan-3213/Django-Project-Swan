@@ -157,3 +157,11 @@ AUTH_USER_MODEL = 'user.User'
 LOGIN_URL = 'user_urls:login'
 LOGIN_REDIRECT_URL = '/'
 
+#------------------Email Details.--------------------#
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ishan.pansuirya@gmail.com'
+EMAIL_HOST_PASSWORD = 'ishan1811oo'
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
