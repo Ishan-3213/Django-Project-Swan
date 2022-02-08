@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h1>Thank you {{ request.user.username }} for shopping with us...!!!</h1>
+    <h1>Thank you {{ user }} for shopping with us...!!!</h1>
     <h3>Your order is listed below.</h3>
     <table>
         <thead>
@@ -32,7 +32,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Tax</td>
+                <td>Tax (18%)</td>
                 <td></td>
                 <td>{{ tax }}</td>
                 <td></td>

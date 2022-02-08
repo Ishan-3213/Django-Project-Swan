@@ -75,17 +75,20 @@ class Address(BaseField):
     country_name = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=6)
 
+    class Meta:
+        db_table = "Addresses"
+
     def __str__(self):
-        return f"{self.address_type} with {self.address}  "
+        return f"{self.address_type} with {self.address}"
 
 class Order(BaseField):
 
-    user = models.ForeignKey(User, null=True,  on_delete=models.SET_NULL, related_name="user_order")
+    cartitem = models.ForeignKey(CartItem, null=True,  on_delete=models.CASCADE, related_name="orderitem")
     address = models.ManyToManyField(Address, related_name="order_address")
     purchased = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user}-{self.get_purchased_display()} "
+        return f"{self.user}-{self.get_purchased_display()}"
 
     @property
     def get_order_total(self):

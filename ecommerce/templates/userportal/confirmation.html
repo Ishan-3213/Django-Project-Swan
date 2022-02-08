@@ -53,8 +53,9 @@
             <h3 class="title_confirmation">Thank you. Your order has been received.</h3>
             <h5 class="">You will receive order confirmation status email in no time.</h5>
             <div class="order_details_table">
-                <h2>Order Details</h2>
+                <!-- <h2>Order Details</h2> -->
                 <div class="table-responsive">
+                    {% comment %}
                     <table class="table">
                         <thead>
                             <tr>
@@ -95,7 +96,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> {% endcomment %}
                     <div class="prd-bottom">
                         <a style="margin-left: 40%;" class=" fa fa-home btn btn-outline-primary float-left" href="{% url 'user_urls:index' %}" type="button"> Home Page</a>
                     </div>

@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from django.core.validators import  RegexValidator
 from generic.models import BaseField
@@ -21,8 +22,9 @@ class User(BaseField, AbstractUser):
     
     # class AbstractUser(AbstractBaseUser, PermissionsMixin):
     #     abstract = True
+    class Meta:
+        db_table = "User"
 
-        
 
     def __str__(self):
         return self.username

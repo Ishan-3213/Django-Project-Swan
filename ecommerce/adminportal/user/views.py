@@ -94,10 +94,10 @@ class AddToCartView(LoginRequiredMixin, View):
         print("cart_item", cart_item)
         return JsonResponse({"product_total" : cart_total, "item_id":item_id, "get_cart_total" : get_cart_total}) 
 
-class CheckoutView(FormView, BaseListView):
+class CheckoutView(BaseListView):
 
-    model = Address
-    form_class = AddressForm
+    model = CartItem
+    # form_class = AddressForm
     template_name = 'userportal/checkout.html'
 
     def get_context_data(self, **kwargs):
@@ -113,12 +113,10 @@ class CheckoutView(FormView, BaseListView):
         print("user", user)
         user = form.save()
         user.save()
-
         print("form-DAta___---------------->>>", form.cleaned_data)
         return super().form_valid(form)
     
     
-
     def get_queryset(self):
 
         user = User.objects.filter(username = self.request.user).first()
@@ -141,7 +139,7 @@ class AddressView(FormView):
         # user_name = form.save()
         form.save()
         # user.save()
-        print("form-DAta_-_-_-_-_-_-_-_-_-->>>", form.cleaned_data , form.save())
+        print("form-DAta_-_-_-_-_-_-_-_-_-_>>>", form.cleaned_data , form.save())
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -164,6 +162,10 @@ class EmailSendView(View):
 
         task.checkout(user_id=user.id)
         cart_total = CartItem(user = self.request.user)
+        cart_total_1 = CartItem.objects.filter(user = user)
+        print("cart_item--------------------??>>>>", cart_total_1, type(cart_total_1))
+        cart_total_1.delete()
+        print("cart----total", type(cart_total))
         context = {'carts': carts, 'cart_total' : cart_total}
         return render(request, 'userportal/confirmation.html', context)
 #------------------------------------Admin-Side------------------------------------------#
