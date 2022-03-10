@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'ecommerce2', 
             'USER': 'postgres', 
-            'PASSWORD': 'ishan1811oo',
+            'PASSWORD': 'soamthinsdcaklsdc',
             'HOST': '127.0.0.1', 
             'PORT': '5432',
        
@@ -161,7 +161,7 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ishan.pansuirya@gmail.com'
-EMAIL_HOST_PASSWORD = 'ishan1811oo'
+EMAIL_HOST_USER = 'Your Email Id'
+EMAIL_HOST_PASSWORD = 'Passwrd'
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
